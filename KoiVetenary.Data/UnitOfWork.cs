@@ -1,4 +1,5 @@
 ﻿using KoiVetenary.Data.Models;
+using KoiVetenary.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,15 @@ namespace MomAndChildren.Data
     public class UnitOfWork
     {
         private FA24_SE1716_PRN231_G3_KoiVetenaryContext _unitOfWorkContext;
+        private AnimalRepository _animal;
 
         public UnitOfWork()
         {
             _unitOfWorkContext = new FA24_SE1716_PRN231_G3_KoiVetenaryContext();
+        }
+        public AnimalRepository AnimalRepository
+        {
+            get { return _animal ??= new AnimalRepository(); }
         }
 
 
