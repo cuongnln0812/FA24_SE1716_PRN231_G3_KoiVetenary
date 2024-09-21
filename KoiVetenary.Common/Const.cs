@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MomAndChildren.Common
+namespace KoiVetenary.Common
 {
     public static class Const
     {
