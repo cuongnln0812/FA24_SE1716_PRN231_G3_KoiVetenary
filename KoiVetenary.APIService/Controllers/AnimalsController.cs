@@ -1,6 +1,6 @@
 ﻿
 using KoiVetenary.Service;
-using MomAndChildren.Business;
+using KoiVetenary.Business;
 using KoiVetenary.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ namespace KoiVetenary.APIService.Controllers
         {
             return await _animalService.GetAnimalsAsync();
             
-            //var fA24_SE1716_PRN231_G3_KoiVetenaryContext = _context.Animals.Include(a => a.Owner).Include(a => a.Type);
+            //var fA24_SE1716_PRN231_G3_KoiVetenaryContext = _service.Animals.Include(a => a.Owner).Include(a => a.Type);
             //return View(await fA24_SE1716_PRN231_G3_KoiVetenaryContext.ToListAsync());
         }
 
@@ -60,7 +60,7 @@ namespace KoiVetenary.APIService.Controllers
 
         //private bool AnimalExists(int id)
         //{
-        //  return (_context.Animals?.Any(e => e.AnimalId == id)).GetValueOrDefault();
+        //  return (_service.Animals?.Any(e => e.AnimalId == id)).GetValueOrDefault();
         //}
     }
 }

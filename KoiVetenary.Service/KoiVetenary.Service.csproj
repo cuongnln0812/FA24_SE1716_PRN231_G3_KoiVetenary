@@ -11,4 +11,8 @@
     <ProjectReference Include="..\KoiVetenary.Data\KoiVetenary.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\Services\" />
+  </ItemGroup>
+
 </Project>
