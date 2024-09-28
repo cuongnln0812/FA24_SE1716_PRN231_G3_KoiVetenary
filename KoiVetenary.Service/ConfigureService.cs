@@ -14,8 +14,9 @@ namespace KoiVetenary.Service
         public static IServiceCollection ConfigureServiceService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAnimalService, AnimalService>();
-            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             return services;
         }
-    }
+    } 
 }

@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Payment\" />
+    <Folder Include="DTO\Services\" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MomAndChildren.Business
+namespace KoiVetenary.Business
 {
 
     public interface IKoiVetenaryResult
@@ -38,7 +38,5 @@ namespace MomAndChildren.Business
             Message = message;
             Data = data;
         }
-
-
     }
 }
