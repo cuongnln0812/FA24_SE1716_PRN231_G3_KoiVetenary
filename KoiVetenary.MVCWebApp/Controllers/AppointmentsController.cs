@@ -9,14 +9,15 @@ using KoiVetenary.Data.Models;
 using KoiVetenary.Common;
 using Newtonsoft.Json;
 using KoiVetenary.Business;
+using KoiVetenary.Service;
 
 namespace KoiVetenary.MVCWebApp.Controllers
 {
     public class AppointmentsController : Controller
     {
-        private readonly FA24_SE1716_PRN231_G3_KoiVetenaryContext _context;
+        private readonly IAppointmentService _context;
 
-        public AppointmentsController(FA24_SE1716_PRN231_G3_KoiVetenaryContext context)
+        public AppointmentsController(IAppointmentService context)
         {
             _context = context;
         }
@@ -85,123 +86,123 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
 
         // GET: Appointments/Create
-        public IActionResult Create()
-        {
-            ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId");
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId");
+        //    return View();
+        //}
 
         // POST: Appointments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,Status,Notes,TotalEstimatedDuration,TotalCost,CreatedBy,ModifiedBy,CreatedDate,UpdatedDate")] Appointment appointment)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(appointment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId", appointment.OwnerId);
-            return View(appointment);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,Status,Notes,TotalEstimatedDuration,TotalCost,CreatedBy,ModifiedBy,CreatedDate,UpdatedDate")] Appointment appointment)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(appointment);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId", appointment.OwnerId);
+        //    return View(appointment);
+        //}
 
         // GET: Appointments/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Appointments == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null || _context.Appointments == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var appointment = await _context.Appointments.FindAsync(id);
-            if (appointment == null)
-            {
-                return NotFound();
-            }
-            ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId", appointment.OwnerId);
-            return View(appointment);
-        }
+        //    var appointment = await _context.Appointments.FindAsync(id);
+        //    if (appointment == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId", appointment.OwnerId);
+        //    return View(appointment);
+        //}
 
         // POST: Appointments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,Status,Notes,TotalEstimatedDuration,TotalCost,CreatedBy,ModifiedBy,CreatedDate,UpdatedDate")] Appointment appointment)
-        {
-            if (id != appointment.AppointmentId)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,Status,Notes,TotalEstimatedDuration,TotalCost,CreatedBy,ModifiedBy,CreatedDate,UpdatedDate")] Appointment appointment)
+        //{
+        //    if (id != appointment.AppointmentId)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(appointment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AppointmentExists(appointment.AppointmentId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId", appointment.OwnerId);
-            return View(appointment);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(appointment);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!AppointmentExists(appointment.AppointmentId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId", appointment.OwnerId);
+        //    return View(appointment);
+        //}
 
         // GET: Appointments/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Appointments == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    //if (id == null || _context.Appointments == null)
+        //    //{
+        //    //    return NotFound();
+        //    //}
 
-            var appointment = await _context.Appointments
-                .Include(a => a.Owner)
-                .FirstOrDefaultAsync(m => m.AppointmentId == id);
-            if (appointment == null)
-            {
-                return NotFound();
-            }
+        //    //var appointment = await _context.Appointments
+        //    //    .Include(a => a.Owner)
+        //    //    .FirstOrDefaultAsync(m => m.AppointmentId == id);
+        //    //if (appointment == null)
+        //    //{
+        //    //    return NotFound();
+        //    //}
 
-            return View(appointment);
-        }
+        //    //return View(appointment);
+        //}
 
         // POST: Appointments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Appointments == null)
-            {
-                return Problem("Entity set 'FA24_SE1716_PRN231_G3_KoiVetenaryContext.Appointments'  is null.");
-            }
-            var appointment = await _context.Appointments.FindAsync(id);
-            if (appointment != null)
-            {
-                _context.Appointments.Remove(appointment);
-            }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    //if (_context.Appointments == null)
+        //    //{
+        //    //    return Problem("Entity set 'FA24_SE1716_PRN231_G3_KoiVetenaryContext.Appointments'  is null.");
+        //    //}
+        //    //var appointment = await _context.Appointments.FindAsync(id);
+        //    //if (appointment != null)
+        //    //{
+        //    //    _context.Appointments.Remove(appointment);
+        //    //}
             
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //    //await _context.SaveChangesAsync();
+        //    //return RedirectToAction(nameof(Index));
+        //}
 
-        private bool AppointmentExists(int id)
-        {
-          return (_context.Appointments?.Any(e => e.AppointmentId == id)).GetValueOrDefault();
-        }
+        //private bool AppointmentExists(int id)
+        //{
+        //  return (_context.Appointments?.Any(e => e.AppointmentId == id)).GetValueOrDefault();
+        //}
     }
 }

@@ -14,8 +14,7 @@ namespace KoiVetenary.MVCWebApp
 
             builder.Services.AddControllersWithViews();
             builder.Services.ConfigureServiceService(builder.Configuration);
-            builder.Services.AddDbContext<FA24_SE1716_PRN231_G3_KoiVetenaryContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+           
 
             //
             var app = builder.Build();
