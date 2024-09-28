@@ -1,8 +1,6 @@
 ﻿using KoiVetenary.Common;
 using KoiVetenary.Data.Models;
 using KoiVetenary.Service.DTO.Animal;
-using MomAndChildren.Business;
-using MomAndChildren.Data;
 using KoiVetenary.Business;
 using KoiVetenary.Data;
 using System;

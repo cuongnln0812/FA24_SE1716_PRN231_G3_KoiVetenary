@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KoiVetenary.Data.Models;
 using KoiVetenary.Common;
-using MomAndChildren.Business;
 using Newtonsoft.Json;
+using KoiVetenary.Business;
 
 namespace KoiVetenary.MVCWebApp.Controllers
 {
@@ -28,7 +28,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
-                    var apiEndpoint = Const.API_ENDPOINT + "Appointments";
+                    var apiEndpoint = Const.API_Endpoint + "Appointments";
                     var response = await httpClient.GetAsync(apiEndpoint);
 
                     if (response.IsSuccessStatusCode)
@@ -64,7 +64,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.API_ENDPOINT + "Appointments/" + id))
+                using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments/" + id))
                 {
                     if (response.IsSuccessStatusCode)
                     {
