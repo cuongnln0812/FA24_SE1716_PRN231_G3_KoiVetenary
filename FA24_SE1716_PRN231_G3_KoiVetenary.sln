@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiVetenary.Common", "KoiVe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiVetenary.APIService", "KoiVetenary.APIService\KoiVetenary.APIService.csproj", "{1451EED9-5B8F-4597-8822-810DEA51A52D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoiVetenary.MVCWebApp", "KoiVetenary.MVCWebApp\KoiVetenary.MVCWebApp.csproj", "{B15D5F71-FE42-4931-8E64-78C3ECB7943D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoiVetenary.MVCWebApp", "KoiVetenary.MVCWebApp\KoiVetenary.MVCWebApp.csproj", "{B15D5F71-FE42-4931-8E64-78C3ECB7943D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +35,10 @@ Global
 		{1451EED9-5B8F-4597-8822-810DEA51A52D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1451EED9-5B8F-4597-8822-810DEA51A52D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1451EED9-5B8F-4597-8822-810DEA51A52D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B15D5F71-FE42-4931-8E64-78C3ECB7943D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B15D5F71-FE42-4931-8E64-78C3ECB7943D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B15D5F71-FE42-4931-8E64-78C3ECB7943D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B15D5F71-FE42-4931-8E64-78C3ECB7943D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
