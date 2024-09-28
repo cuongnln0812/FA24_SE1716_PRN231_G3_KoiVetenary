@@ -1,5 +1,6 @@
 ﻿using KoiVetenary.Common;
 using KoiVetenary.Data.Models;
+using KoiVetenary.Service.DTO.Animal;
 using MomAndChildren.Business;
 using MomAndChildren.Data;
 using System;
@@ -41,6 +42,7 @@ namespace KoiVetenary.Service
                         return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Name is duplicated.");
                     }
                 }
+
                 int result = await _unitOfWork.AnimalRepository.CreateAsync(animal);
                 if (result > 0)
                 {
@@ -59,7 +61,7 @@ namespace KoiVetenary.Service
 
         public Task<IKoiVetenaryResult> DeleteAnimal(int? animalId)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException();    
         }
 
         public Task<IKoiVetenaryResult> GetAnimalByIdAsync(int? animalId)

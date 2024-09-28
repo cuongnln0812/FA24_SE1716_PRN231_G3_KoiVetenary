@@ -8,6 +8,8 @@ namespace KoiVetenary.Common
 {
     public static class Const
     {
+        public static string API_ENDPOINT = "https://localhost:7238/api/";
+
         #region Error Codes
 
         public static int ERROR_EXCEPTION = -4;

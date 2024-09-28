@@ -3,6 +3,7 @@ using KoiVetenary.Service;
 using MomAndChildren.Business;
 using KoiVetenary.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using KoiVetenary.Service.DTO.Animal;
 
 namespace KoiVetenary.APIService.Controllers
 {
