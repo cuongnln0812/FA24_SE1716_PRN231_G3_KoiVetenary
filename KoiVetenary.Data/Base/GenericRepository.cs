@@ -227,32 +227,62 @@ namespace KoiVetenary.Data.Base
 
         public T GetById(int id)
         {
-            return _context.Set<T>().Find(id);
+            var entity = _context.Set<T>().Find(id);
+            if (entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
         }
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            var entity = await _context.Set<T>().FindAsync(id);
+            if(entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
         }
 
         public T GetById(string code)
         {
-            return _context.Set<T>().Find(code);
+            var entity = _context.Set<T>().Find(code);
+            if (entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
         }
 
         public async Task<T> GetByIdAsync(string code)
         {
-            return await _context.Set<T>().FindAsync(code);
+            var entity = await _context.Set<T>().FindAsync(code);
+            if (entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
         }
 
         public T GetById(Guid code)
         {
-            return _context.Set<T>().Find(code);
+            var entity = _context.Set<T>().Find(code);
+            if (entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
         }
 
         public async Task<T> GetByIdAsync(Guid code)
         {
-            return await _context.Set<T>().FindAsync(code);
+            var entity = await _context.Set<T>().FindAsync(code);
+            if (entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
         }
     }
 }

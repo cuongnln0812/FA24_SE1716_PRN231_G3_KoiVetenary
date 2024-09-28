@@ -15,6 +15,7 @@ namespace KoiVetenary.Data
         private ServiceRepository _service;
         private CategoryRepository _category;
         private AppointmentRepository _appointment;
+        private OwnerRepository _owner;
 
         public UnitOfWork()
         {
@@ -38,6 +39,11 @@ namespace KoiVetenary.Data
         public AppointmentRepository AppointmentRepository
         {
             get { return _appointment ??= new AppointmentRepository(); }
+        }
+
+        public OwnerRepository OwnerRepository
+        {
+            get { return _owner ??= new OwnerRepository(); }
         }
 
 

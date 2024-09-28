@@ -15,11 +15,12 @@ namespace KoiVetenary.MVCWebApp.Controllers
 {
     public class AppointmentsController : Controller
     {
-        private readonly IAppointmentService _context;
+        private readonly IAppointmentService _appointmentService;
+        private readonly IOwnerService _ownerService;
 
-        public AppointmentsController(IAppointmentService context)
+        public AppointmentsController(IAppointmentService appointmentService)
         {
-            _context = context;
+            _appointmentService = appointmentService;
         }
 
         // GET: Appointments
@@ -85,46 +86,80 @@ namespace KoiVetenary.MVCWebApp.Controllers
             return View(new Appointment());
         }
 
-        // GET: Appointments/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId");
-        //    return View();
-        //}
+        //GET: Appointments/Create
+        public async Task<IActionResult> CreateAsync()
+        {
+            ViewData["OwnerId"] = new SelectList(await this.GetOwners(), "OwnerId", "OwnerId");
+            return View();
+        }
 
         // POST: Appointments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,Status,Notes,TotalEstimatedDuration,TotalCost,CreatedBy,ModifiedBy,CreatedDate,UpdatedDate")] Appointment appointment)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(appointment);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId", appointment.OwnerId);
-        //    return View(appointment);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Appointment appointment)
+        {
+            bool saveStatus = false;
 
-        // GET: Appointments/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null || _context.Appointments == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.PostAsJsonAsync(Const.API_Endpoint + "Appointments/", appointment))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<KoiVetenaryResult>(content);
+                            if (result != null && result.Status == Const.SUCCESS_CREATE_CODE)
+                            {
+                                saveStatus = true;
+                            }
+                            else
+                            {
+                                saveStatus = false;
+                            }
+                        }
+                    }
+                }
+            }
+            if (saveStatus)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                ViewData["OwnerId"] = new SelectList(await this.GetOwners(), "OwnerId", "OwnerId");
+                return View(appointment);
+            }
+        }
 
-        //    var appointment = await _context.Appointments.FindAsync(id);
-        //    if (appointment == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["OwnerId"] = new SelectList(_context.Owners, "OwnerId", "OwnerId", appointment.OwnerId);
-        //    return View(appointment);
-        //}
+        //GET: Appointments/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            var appointment = new Appointment();
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<KoiVetenaryResult>(content);
+
+                        if (result != null && result.Data != null)
+                        {
+                            appointment = JsonConvert.DeserializeObject<Appointment>(result.Data.ToString());
+                        }
+                    }
+                }
+            }
+
+            ViewData["OwnerId"] = new SelectList(await this.GetOwners(), "OwnerId", "OwnerId", appointment.OwnerId);
+            return View(appointment);
+        }
 
         // POST: Appointments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -195,7 +230,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         //    //{
         //    //    _context.Appointments.Remove(appointment);
         //    //}
-            
+
         //    //await _context.SaveChangesAsync();
         //    //return RedirectToAction(nameof(Index));
         //}
@@ -204,5 +239,28 @@ namespace KoiVetenary.MVCWebApp.Controllers
         //{
         //  return (_context.Appointments?.Any(e => e.AppointmentId == id)).GetValueOrDefault();
         //}
+
+        private async Task<List<Owner>> GetOwners()
+        {
+            var listOwners = new List<Owner>();
+            //
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Owner"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var owners = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
+
+                        if (owners != null && owners.Data != null)
+                        {
+                            listOwners = JsonConvert.DeserializeObject<List<Owner>>(owners.Data.ToString());
+                        }
+                    }
+                }
+            }
+            return listOwners;
+        }
     }
 }
