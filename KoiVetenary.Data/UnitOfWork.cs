@@ -6,12 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MomAndChildren.Data
+namespace KoiVetenary.Data
 {
     public class UnitOfWork
     {
         private FA24_SE1716_PRN231_G3_KoiVetenaryContext _unitOfWorkContext;
         private AnimalRepository _animal;
+        private ServiceRepository _service;
+        private CategoryRepository _category;
 
         public UnitOfWork()
         {
@@ -21,8 +23,16 @@ namespace MomAndChildren.Data
         {
             get { return _animal ??= new AnimalRepository(); }
         }
-
-
+        //
+        public ServiceRepository ServiceRepository
+        {
+            get { return _service ??= new ServiceRepository(_unitOfWorkContext); }
+        }
+        //
+        public CategoryRepository CategoryRepository
+        {
+            get { return _category ??= new CategoryRepository(_unitOfWorkContext); }
+        }
         ////TO-DO CODE HERE/////////////////
 
         #region Set transaction isolation levels
