@@ -1,0 +1,75 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr class="card-header">
+                    <th class="card-title text-center">AppointmentDetail Id</th>
+                    <th class="card-title text-center">Appointment Id</th>
+                    <th class="card-title text-center">Animal Id</th>
+                    <th class="card-title text-center">Veterinarian Id</th>
+                    <th class="card-title text-center">Service Id</th>
+                    <th class="card-title text-center">Service Date</th>
+                    <th class="card-title text-center">Service Time</th>
+                    <th class="card-title text-center">Status</th>
+                    <th class="card-title text-center">Notes</th>
+                    <th class="card-title text-center">Service Duration</th>
+                    <th class="card-title text-center">Service Cost</th>
+                </tr>
+            </thead>
+            <tbody class="tblBanks">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadData();
+        });
+
+        function loadData() {
+            alert("Load data progressing ...");
+
+            $.ajax({
+                url: 'https://localhost:7238/api/AppointmentDetail',
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    alert('Server response: ' + result.message);
+                    console.log(result);
+                    var html = '';
+                    $.each(result.data, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.appointmentDetailId + '</td>';
+                        html += '<td>' + item.appointmentId + '</td>';
+                        html += '<td>' + item.animalId + '</td>';
+                        html += '<td>' + item.veterinarianId + '</td>';
+                        html += '<td>' + item.serviceId + '</td>';
+                        html += '<td>' + item.serviceDate + '</td>';
+                        html += '<td>' + item.serviceTime + '</td>';
+                        html += '<td>' + item.status + '</td>';
+                        html += '<td>' + item.notes + '</td>';
+                        html += '<td>' + item.serviceDuration + '</td>';
+                        html += '<td>' + item.serviceCost + '</td>';
+                        html += '<td></td>';
+                        html += '</tr>';
+                    });
+                    $('.tblBanks').html(html);
+                },
+                error: function (xhr, error) {
+                    alert(xhr.statusText);
+                }
+            });
+        }
+    </script>
+}

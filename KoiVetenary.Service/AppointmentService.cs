@@ -60,11 +60,11 @@ namespace KoiVetenary.Service
             try
             {
                 
-                    var result = await _unitOfWork.AppointmentRepository.GetByIdAsync((int)id);
+                var result = await _unitOfWork.AppointmentRepository.GetByIdAsync((int)id);
 
                 if (result != null)
                 {
-                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG);
+                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
                 }
                 else
                 {
@@ -86,7 +86,7 @@ namespace KoiVetenary.Service
 
                 if (result != null)
                 {
-                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG);
+                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
                 }
                 else
                 {
