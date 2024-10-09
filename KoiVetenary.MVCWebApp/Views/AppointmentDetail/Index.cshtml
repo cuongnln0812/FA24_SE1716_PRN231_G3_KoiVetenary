@@ -4,6 +4,17 @@
 @{
 }
 
+<div class="row">
+    <div class="col-md-10">
+        <h3 class="display-8">Bank List</h3>
+    </div>
+    <div class="col-md-2 text-end">
+        <button type="button" class="btn btn-primary" onclick="add();">
+            Add
+        </button>
+    </div>
+</div>
+
 
 <div class="row">
     <div class="col-md-12">
@@ -23,9 +34,30 @@
                     <th class="card-title text-center">Service Cost</th>
                 </tr>
             </thead>
-            <tbody class="tblBanks">
+            <tbody class="tblAppointmentDetails">
             </tbody>
         </table>
+    </div>
+</div>
+
+<div class="modal fade" id="appointmentDetailModal" tabindex="-1" aria-labelledby="appointmentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="appointmentDetailModalLabel">Appointment Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="btSave" type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
@@ -64,12 +96,20 @@
                         html += '<td></td>';
                         html += '</tr>';
                     });
-                    $('.tblBanks').html(html);
+                    $('.tblAppointmentDetails').html(html);
                 },
                 error: function (xhr, error) {
                     alert(xhr.statusText);
                 }
             });
         }
+
+        function add() {
+            $("#appointmentDetailModalContent").html("");
+            $("#appointmentDetailModalLabel").html("Add New");
+
+            $('#appointmentDetailModal').modal('show');
+        }
+
     </script>
 }
