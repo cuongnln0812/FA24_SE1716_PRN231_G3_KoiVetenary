@@ -14,6 +14,7 @@ namespace KoiVetenary.Data
         private AnimalRepository _animal;
         private ServiceRepository _service;
         private CategoryRepository _category;
+        private VeterinarianRepository _veterinarian;
 
         public UnitOfWork()
         {
@@ -32,6 +33,11 @@ namespace KoiVetenary.Data
         public CategoryRepository CategoryRepository
         {
             get { return _category ??= new CategoryRepository(_unitOfWorkContext); }
+        }
+        //
+        public VeterinarianRepository VeterinarianRepository
+        {
+            get { return _veterinarian ??= new VeterinarianRepository(_unitOfWorkContext); }
         }
         ////TO-DO CODE HERE/////////////////
 

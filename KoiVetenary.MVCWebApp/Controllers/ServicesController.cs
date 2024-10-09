@@ -40,6 +40,13 @@ namespace KoiVetenary.MVCWebApp.Controllers
                         if (services != null && services.Data != null)
                         {
                             var data = JsonConvert.DeserializeObject<List<Data.Models.Service>>(services.Data.ToString());
+                            var categories = await GetCategories();
+                            foreach (var item in data)
+                            {
+                                item.Category = categories.FirstOrDefault(x => x.CategoryId == item.CategoryId);
+                            }
+
+                            //ViewData["CategoryId"] = new SelectList(await GetCategories(), "CategoryId", "Name", data.CategoryId);
                             return View(data);
                         }
                     }
@@ -170,7 +177,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
-                    using (var response = await httpClient.PutAsJsonAsync(Const.API_Endpoint + "Services", service))
+                    using (var response = await httpClient.PutAsJsonAsync(Const.API_Endpoint + "Services/" + id, service))
                     {
                         if (response.IsSuccessStatusCode)
                         {

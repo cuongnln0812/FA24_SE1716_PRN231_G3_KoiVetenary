@@ -7,11 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace KoiVetenary.Service
 {
     public interface IServiceService
     {
+        Task<Data.Models.Service> GetServiceUsingOdata(int serviceId);
+        Task<IQueryable<Data.Models.Service>> GetServicesUsingOdata();
+
         Task<IKoiVetenaryResult> GetServicesAsync();
 
         Task<IKoiVetenaryResult> GetServiceByIdAsync(int serviceId);
@@ -34,6 +38,20 @@ namespace KoiVetenary.Service
             _unitOfWork ??= new UnitOfWork();
         }
         //
+
+        public static async Task<List<Data.Models.Service>> LoadServicesAsync(string filePath)
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("File not found.", filePath);
+
+            // Đọc nội dung file JSON
+            var jsonString = await File.ReadAllTextAsync(filePath);
+
+            // Deserialize JSON thành danh sách Service
+            var services = JsonSerializer.Deserialize<List<Data.Models.Service>>(jsonString);
+
+            return services ?? new List<Data.Models.Service>();
+        }
 
         public async Task<IKoiVetenaryResult> CreateService(Data.Models.Service service)
         {
@@ -152,6 +170,22 @@ namespace KoiVetenary.Service
             {
                 return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
             }
+        }
+        //For assignment 1
+        public async Task<IQueryable<Data.Models.Service>> GetServicesUsingOdata()
+        {
+            var services = await LoadServicesAsync("SeedData/services.json");
+            if (services == null)
+                return Enumerable.Empty<Data.Models.Service>().AsQueryable();
+            return services.AsQueryable();
+        }
+        public async Task<Data.Models.Service> GetServiceUsingOdata(int serviceId)
+        {
+            var services = await LoadServicesAsync("SeedData/services.json");
+            if (services == null)
+                return null;
+            var service = services.FirstOrDefault(s => s.ServiceId == serviceId);
+            return service;
         }
     }
 }

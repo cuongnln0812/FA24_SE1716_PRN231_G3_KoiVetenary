@@ -1,5 +1,9 @@
 using KoiVetenary.Service;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.OpenApi.Writers;
+using KoiVetenary.Data.Models;
+using Microsoft.AspNetCore.OData;
+using Microsoft.OData.ModelBuilder;
 
 namespace KoiVetenary.APIService
 {
@@ -7,18 +11,27 @@ namespace KoiVetenary.APIService
     {
         public static void Main(string[] args)
         {
+            var modelBuilder = new ODataConventionModelBuilder();
+            modelBuilder.EntitySet<Data.Models.Service>("Services");
+            //
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
             builder.Services.ConfigureServiceService(builder.Configuration);
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+           
+            builder.Services.AddControllers().AddOData(opt =>
+            opt.AddRouteComponents("odata", modelBuilder.GetEdmModel())
+               .Select()
+               .Filter()
+               .OrderBy()
+               .Expand()
+               .SetMaxTop(100)
+               .Count());
+            
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+
+            ///////////
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -33,7 +46,6 @@ namespace KoiVetenary.APIService
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

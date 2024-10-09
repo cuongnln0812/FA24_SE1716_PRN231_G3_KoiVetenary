@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KoiVetenary.Data.Models;
+using System.IO;
+using System.Text.Json;
 using KoiVetenary.Service;
 using KoiVetenary.Business;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace KoiVetenary.APIService.Controllers
 {
@@ -17,21 +20,41 @@ namespace KoiVetenary.APIService.Controllers
     {
         private readonly IServiceService _service;
 
+        
         public ServicesController(IServiceService service)
         {
             _service = service;
+        }
+
+        //For assignment 1
+        [HttpGet]
+        [EnableQuery]
+        [Route("odata")]
+        public async Task<IQueryable<Data.Models.Service>> GetServicesUsingOData()
+        {
+            return await _service.GetServicesUsingOdata();
+        }
+
+        [HttpGet]
+        [EnableQuery]
+        [Route("odata")]
+        public async Task<Data.Models.Service> GetServiceUsingOData(int serviceId)
+        {
+            return await _service.GetServiceUsingOdata(serviceId);
         }
 
         // GET: api/Services
         [HttpGet]
         public async Task<IKoiVetenaryResult> GetServices()
         {
+
           return await _service.GetServicesAsync();
         }
 
         // GET: api/Services/5
+
         [HttpGet("{id}")]
-        public async Task<IKoiVetenaryResult> GetService(int id)
+        public async Task<IKoiVetenaryResult> GetService( int id)
         {
           return await _service.GetServiceByIdAsync(id);
         }
