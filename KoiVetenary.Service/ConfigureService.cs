@@ -18,6 +18,7 @@ namespace KoiVetenary.Service
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IAppointmentDetailService, AppointmentDetailService>();
+            services.AddScoped<IOwnerService, OwnerService>();
             return services;
         }
     } 

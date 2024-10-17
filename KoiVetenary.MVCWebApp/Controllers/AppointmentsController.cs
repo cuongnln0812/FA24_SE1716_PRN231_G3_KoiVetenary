@@ -19,9 +19,10 @@ namespace KoiVetenary.MVCWebApp.Controllers
         private readonly IAppointmentService _appointmentService;
         private readonly IOwnerService _ownerService;
 
-        public AppointmentsController(IAppointmentService appointmentService)
+        public AppointmentsController(IAppointmentService appointmentService, IOwnerService ownerService)
         {
             _appointmentService = appointmentService;
+            _ownerService = ownerService;
         }
 
         // GET: Appointments
@@ -85,6 +86,27 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
 
             return View(new Appointment());
+            //var appointment = new Appointment();
+
+            //using (var httpClient = new HttpClient())
+            //{
+            //    using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments/" + id))
+            //    {
+            //        if (response.IsSuccessStatusCode)
+            //        {
+            //            var content = await response.Content.ReadAsStringAsync();
+            //            var result = JsonConvert.DeserializeObject<KoiVetenaryResult>(content);
+
+            //            if (result != null && result.Data != null)
+            //            {
+            //                appointment = JsonConvert.DeserializeObject<Appointment>(result.Data.ToString());
+            //                return View(appointment);
+            //            }
+            //        }
+            //    }
+            //}
+
+            //return View(new Appointment());
         }
 
         //GET: Appointments/Create
@@ -278,7 +300,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             //
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Owner"))
+                using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Owners"))
                 {
                     if (response.IsSuccessStatusCode)
                     {
