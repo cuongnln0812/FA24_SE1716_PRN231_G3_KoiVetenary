@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KoiVetenary.Service.DTO.Owner;
 
 namespace KoiVetenary.Service
 {
@@ -44,13 +45,28 @@ namespace KoiVetenary.Service
 
         public async Task<IKoiVetenaryResult> GetOwnersAsync()
         {
-            var categories = await _unitOfWork.OwnerRepository.GetAllAsync();
+            var owners = await _unitOfWork.OwnerRepository.GetAllAsync();
 
-            if (categories == null || !categories.Any())
+            if (owners == null || !owners.Any())
 
                 return new KoiVetenaryResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA_MSG, new List<Owner>());
 
-            return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, categories);
+            //var ownerResponses = owners.Select(owner => new OwnerResponse
+            //{
+            //    OwnerId = owner.OwnerId,
+            //    FirstName = owner.FirstName,
+            //    LastName = owner.LastName,
+            //    Address = owner.Address,
+            //    City = owner.City,
+            //    State = owner.State,
+            //    ZipCode = owner.ZipCode,
+            //    Phone = owner.Phone,
+            //    Email = owner.Email,
+            //    RegistrationDate = owner.RegistrationDate,
+            //    PreferredContactMethod = owner.PreferredContactMethod
+            //}).ToList();
+
+            return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, owners);
         }
 
         public Task<IKoiVetenaryResult> GetOwnerById(int categoryId)

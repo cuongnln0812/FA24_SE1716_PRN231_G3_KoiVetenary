@@ -23,7 +23,7 @@ namespace KoiVetenary.APIService.Controllers
         public async Task<IKoiVetenaryResult> GetAnimalsAsync()
         {
             return await _animalService.GetAnimalsAsync();
-            
+
             //var fA24_SE1716_PRN231_G3_KoiVetenaryContext = _service.Animals.Include(a => a.Owner).Include(a => a.Type);
             //return View(await fA24_SE1716_PRN231_G3_KoiVetenaryContext.ToListAsync());
         }
@@ -32,28 +32,28 @@ namespace KoiVetenary.APIService.Controllers
         [HttpGet("{id}")]
         public async Task<IKoiVetenaryResult> GetAnimalByIdAsync([FromRoute] int id)
         {
-             return await _animalService.GetAnimalByIdAsync(id);
+            return await _animalService.GetAnimalByIdAsync(id);
         }
 
         // POST: Animals/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IKoiVetenaryResult> Create([FromBody] Animal animal)
+        public async Task<IKoiVetenaryResult> CreateAnimalAsync([FromBody] AnimalRequest animal)
         {
             return await _animalService.CreateAnimal(animal);
         }
 
         // PUT: Animals/Edit/5
         [HttpPut]
-        public async Task<IKoiVetenaryResult> UpdateAnimalAsync([FromBody] Animal animal)
+        public async Task<IKoiVetenaryResult> UpdateAnimalAsync(AnimalRequest animal)
         {
             return await _animalService.UpdateAnimal(animal);
         }
 
         // DELETE: Animals/Delete/5
         [HttpDelete("{id}")]
-        public async Task<IKoiVetenaryResult> DeleteAnimal([FromRoute] int id)
+        public async Task<IKoiVetenaryResult> DeleteAnimalAsync([FromRoute] int id)
         {
             return await _animalService.DeleteAnimal(id);
         }

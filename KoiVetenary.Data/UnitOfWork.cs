@@ -18,6 +18,7 @@ namespace KoiVetenary.Data
         private AppointmentRepository _appointment;
         private AppointmentDetailRepository _appointmentDetail;
         private OwnerRepository _owner;
+        private AnimalTypeRepository _animalType;
 
         public UnitOfWork()
         {
@@ -56,6 +57,11 @@ namespace KoiVetenary.Data
         public OwnerRepository OwnerRepository
         {
             get { return _owner ??= new OwnerRepository(); }
+        }
+
+        public AnimalTypeRepository AnimalTypeRepository
+        {
+            get { return _animalType ??= new AnimalTypeRepository(); }
         }
 
         ////TO-DO CODE HERE/////////////////
