@@ -10,7 +10,6 @@ using KoiVetenary.Service;
 using KoiVetenary.Business;
 using KoiVetenary.Common;
 using Newtonsoft.Json;
-using KoiVetenary.Service.DTO.Owner;
 using KoiVetenary.Service.DTO.Animal;
 
 namespace KoiVetenary.MVCWebApp.Controllers
@@ -142,8 +141,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
                     }
                 }
             }
-            ViewData["OwnerId"] = new SelectList(await GetOwners(), "OwnerId", "FirstName", animal.OwnerId);
-            ViewData["TypeId"] = new SelectList(await GetAnimalTypes(), "TypeId", "TypeName", animal.TypeId);
+            ViewData["OwnerId"] = new SelectList(await GetOwners(), "OwnerId", "FirstName");
+            ViewData["TypeId"] = new SelectList(await GetAnimalTypes(), "TypeId", "TypeName");
             return View(animal);
         }
 
@@ -190,44 +189,49 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
         }
 
-        //// GET: Animals/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null || _context.Animals == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Animals/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var animal = new Animal();
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Animals/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var animalResult = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
 
-        //    var animal = await _context.Animals
-        //        .Include(a => a.Owner)
-        //        .Include(a => a.Type)
-        //        .FirstOrDefaultAsync(m => m.AnimalId == id);
-        //    if (animal == null)
-        //    {
-        //        return NotFound();
-        //    }
+                        if (animalResult != null && animalResult.Data != null)
+                        {
+                            animal = JsonConvert.DeserializeObject<Animal>(animalResult.Data.ToString());
+                            return View(animal);
+                        }
+                    }
+                }
+            }
+            return View(animal);
+        }
 
-        //    return View(animal);
-        //}
+        // POST: Animals/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            bool deleteStatus = false;
 
-        //// POST: Animals/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    if (_context.Animals == null)
-        //    {
-        //        return Problem("Entity set 'FA24_SE1716_PRN231_G3_KoiVetenaryContext.Animals'  is null.");
-        //    }
-        //    var animal = await _context.Animals.FindAsync(id);
-        //    if (animal != null)
-        //    {
-        //        _context.Animals.Remove(animal);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.DeleteAsync(Const.API_Endpoint + "Animals/" + id))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+            return RedirectToAction(nameof(Delete), new { id = id });
+        }
 
 
         private static async Task<List<Owner>> GetOwners()

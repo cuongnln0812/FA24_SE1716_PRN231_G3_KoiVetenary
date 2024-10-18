@@ -2,7 +2,7 @@
 
 namespace KoiVetenary.MVCWebApp.Controllers
 {
-    public class AppointmentDetailController : Controller
+    public class AnimalsAjaxController : Controller
     {
         public IActionResult Index()
         {
