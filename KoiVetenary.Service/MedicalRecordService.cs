@@ -35,6 +35,7 @@ namespace KoiVetenary.Service
             {
                 medicalRecord.CreatedDate = DateTime.Now;
                 medicalRecord.CreatedBy = "Admin";
+                medicalRecord.ModifiedBy = null;
                 int result = await _unitOfWork.MedicalRecordRepository.CreateAsync(medicalRecord);
                 if (result > 0)
                 {
