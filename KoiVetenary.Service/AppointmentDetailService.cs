@@ -47,5 +47,55 @@ namespace KoiVetenary.Service
                 return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
+        public async Task<IKoiVetenaryResult> UpdateDetailAppointmentServiceID(int appointmentId, int serviceId)
+        {
+            try
+            {
+                var appointment = await _unitOfWork.AppointmentDetailRepository.GetByIdAsync(appointmentId);
+                if (appointment != null)
+                {
+                    appointment.ServiceId = serviceId;
+                    int result = await _unitOfWork.AppointmentDetailRepository.UpdateAsync(appointment);
+                    if (result > 0)
+                    {
+                        return new KoiVetenaryResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+                    }
+                    else
+                    {
+                        return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                    }
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IKoiVetenaryResult> CreateAppointmentDetailAsync(AppointmentDetail appointment)
+        {
+            try
+            {
+
+                int result = await _unitOfWork.AppointmentDetailRepository.CreateAsync(appointment);
+                if (result > 0)
+                {
+                    return new KoiVetenaryResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
     }
 }
