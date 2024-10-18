@@ -27,8 +27,7 @@ namespace KoiVetenary.Data.Models
         public string PreferredContactMethod { get; set; }
 
         public virtual ICollection<Animal> Animals { get; set; }
-        
-        [JsonIgnore]       
+             
         public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }
