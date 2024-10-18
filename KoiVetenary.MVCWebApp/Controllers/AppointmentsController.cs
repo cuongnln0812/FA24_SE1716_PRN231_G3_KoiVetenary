@@ -61,6 +61,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
 
             return View(new List<Appointment>());
         }
+    
 
 
         // GET: Appointments/Details/5
@@ -110,11 +111,13 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
 
         //GET: Appointments/Create
-        public async Task<IActionResult> CreateAsync()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
             ViewData["OwnerId"] = new SelectList(await this.GetOwners(), "OwnerId", "OwnerId");
             return View();
         }
+
 
         // POST: Appointments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
