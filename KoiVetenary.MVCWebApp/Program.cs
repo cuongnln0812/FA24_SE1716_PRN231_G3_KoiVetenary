@@ -1,5 +1,7 @@
 using KoiVetenary.Business;
 using KoiVetenary.Service;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 //var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 //                      });
 //});
 //
+
 var app = builder.Build();
 
 

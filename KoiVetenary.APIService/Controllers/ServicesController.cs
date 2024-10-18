@@ -11,6 +11,7 @@ using System.Text.Json;
 using KoiVetenary.Service;
 using KoiVetenary.Business;
 using Microsoft.AspNetCore.OData.Query;
+using KoiVetenary.Data.Repositories;
 
 namespace KoiVetenary.APIService.Controllers
 {
@@ -19,7 +20,7 @@ namespace KoiVetenary.APIService.Controllers
     public class ServicesController : ControllerBase
     {
         private readonly IServiceService _service;
-
+        
         
         public ServicesController(IServiceService service)
         {
@@ -27,21 +28,21 @@ namespace KoiVetenary.APIService.Controllers
         }
 
         //For assignment 1
-        [HttpGet]
-        [EnableQuery]
-        [Route("odata")]
-        public async Task<IQueryable<Data.Models.Service>> GetServicesUsingOData()
-        {
-            return await _service.GetServicesUsingOdata();
-        }
+        //[HttpGet]
+        //[EnableQuery]
+        //[Route("odata")]
+        //public async Task<IQueryable<Data.Models.Service>> GetServicesUsingOData()
+        //{
+        //    return await _service.GetServicesUsingOdata();
+        //}
 
-        [HttpGet]
-        [EnableQuery]
-        [Route("odata")]
-        public async Task<Data.Models.Service> GetServiceUsingOData(int serviceId)
-        {
-            return await _service.GetServiceUsingOdata(serviceId);
-        }
+        //[HttpGet]
+        //[EnableQuery]
+        //[Route("odata")]
+        //public async Task<Data.Models.Service> GetServiceUsingOData(int serviceId)
+        //{
+        //    return await _service.GetServiceUsingOdata(serviceId);
+        //}
 
         // GET: api/Services
         [HttpGet]
@@ -78,6 +79,14 @@ namespace KoiVetenary.APIService.Controllers
         public async Task<IKoiVetenaryResult> DeleteService(int id)
         {
             return await _service.DeleteService(id);
-        }    
+        }
+        //
+        [HttpGet("autocomplete")]
+        public async Task<IKoiVetenaryResult> Autocomplete(string query)
+        {
+            var services = await _service.SearchByKeyword(query);
+
+            return services;
+        }
     }
 }
