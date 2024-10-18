@@ -15,6 +15,7 @@ namespace KoiVetenary.Service
         Task<IKoiVetenaryResult> GetAppointmentDetailsAsync();
 
         Task<IKoiVetenaryResult> UpdateDetailAppointmentServiceID(int appointmentId, int serviceId);
+        Task<IKoiVetenaryResult> UpdateDetailAppointmentVeteID(int appointmentId, int veteId);
         Task<IKoiVetenaryResult> CreateAppointmentDetailAsync(AppointmentDetail appointment);
     }
     public class AppointmentDetailService : IAppointmentDetailService
@@ -90,6 +91,36 @@ namespace KoiVetenary.Service
                 else
                 {
                     return new KoiVetenaryResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IKoiVetenaryResult> UpdateDetailAppointmentVeteID(int appointmentId, int veteId)
+        {
+
+           try
+            {
+                var appointment = await _unitOfWork.AppointmentDetailRepository.GetByIdAsync(appointmentId);
+                if (appointment != null)
+                {
+                    appointment.VeterinarianId = veteId;
+                    int result = await _unitOfWork.AppointmentDetailRepository.UpdateAsync(appointment);
+                    if (result > 0)
+                    {
+                        return new KoiVetenaryResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+                    }
+                    else
+                    {
+                        return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                    }
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
             }
             catch (Exception ex)

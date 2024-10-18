@@ -32,6 +32,24 @@ namespace KoiVetenary.Data.Repositories
                 throw ex;
             }
         }
+        public async Task<bool> UpdateVeteId(int appointmentId, int veteId)
+        {
+            try
+            {
+                var appointmentDetail = await _context.AppointmentDetails.FirstOrDefaultAsync(x => x.AppointmentId == appointmentId);
+                if (appointmentDetail != null)
+                {
+                    appointmentDetail.VeterinarianId = veteId;
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
 

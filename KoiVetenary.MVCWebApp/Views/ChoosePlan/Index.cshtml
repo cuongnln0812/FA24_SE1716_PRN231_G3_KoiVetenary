@@ -16,101 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Table</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .custom-table {
-            width: 100%;
-            background-color: #fff;
-        }
-
-            .custom-table thead th {
-                border-bottom: 2px solid #dee2e6;
-                font-weight: bold;
-                color: #6c757d;
-                text-transform: uppercase;
-            }
-
-            .custom-table tbody td {
-                vertical-align: middle;
-                padding: 15px;
-                color: #333;
-            }
-
-            .custom-table tbody tr:hover {
-                background-color: #f8f9fa;
-            }
-
-        .rounded-circle {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-        }
-
-        .height {
-            height: 100vh;
-        }
-
-
-        .search {
-            position: relative;
-            box-shadow: 0 0 40px rgba(51, 51, 51, .1);
-        }
-
-            .search input {
-                height: 60px;
-                text-indent: 25px;
-                border: 2px solid #d6d4d4;
-            }
-
-
-                .search input:focus {
-                    box-shadow: none;
-                    border: 2px solid blue;
-                }
-
-            .search .fa-search {
-                position: absolute;
-                top: 20px;
-                left: 16px;
-            }
-
-            .search button {
-                position: absolute;
-                top: 5px;
-                right: 5px;
-                height: 50px;
-                width: 110px;
-                background: blue;
-            }
-
-        .autocomplete-suggestions {
-            border: 1px solid #d4d4d4;
-            border-top: none;
-            max-height: 200px;
-            overflow-y: auto;
-            position: absolute;
-            z-index: 1000;
-            background-color: #fff;
-        }
-
-        .autocomplete-suggestion {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-            .autocomplete-suggestion:hover {
-                background-color: #e9e9e9;
-            }
-
-        .selected-row {
-            background-color: lightblue; /* Màu nền khi hàng được chọn */
-        }
-
-        .disabled {
-            background-color: grey;
-            cursor: not-allowed;
-        }
-
-    </style>
+    <link rel="stylesheet" href="~/css/plan.css" asp-append-version="true" />
 </head>
 <body>
     <div class="container mt-5">
@@ -176,21 +82,15 @@
                 }
             });
             $('.clickable-row').click(function () {
-                // Lấy serviceId từ thuộc tính data-id của tr
                 var serviceId = $(this).data('id');
-
-                // Gọi API để cập nhật appointment với serviceId bằng phương thức PUT
+                // update appointment với serviceId
                 $.ajax({
-                    url: 'https://localhost:7238/api/AppointmentDetail', // URL API
-                    type: 'PUT', // Đổi từ POST thành PUT
-                    data: JSON.stringify({
-                        appointmentId: 'your_appointment_id_here', // Thay 'your_appointment_id_here' bằng giá trị appointmentId thích hợp
-                        serviceId: serviceId
-                    }),
-                    contentType: 'application/json', // Đặt loại nội dung là JSON
+                    url: 'https://localhost:7238/api/AppointmentDetail/update-service/1/' + serviceId,
+                    type: 'PUT',
+                    
                     success: function () {
-                        // Chuyển hướng tới trang chi tiết dịch vụ sau khi cập nhật thành công
-                        window.location.href = '/Services/Details?ServiceId=' + serviceId;
+                        alert('Service added successfully!');
+                        window.location.href = '/Veterinarians/ChooseVete';
                     },
                     error: function () {
                         alert('Error updating appointment');
@@ -207,13 +107,11 @@
 
             rows.forEach(row => {
                 row.addEventListener('click', function () {
-                    // Bỏ chọn hàng khác
+
                     rows.forEach(r => r.classList.remove('selected-row'));
 
-                    // Đánh dấu hàng hiện tại
                     row.classList.add('selected-row');
 
-                    // Kích hoạt nút "Next"
                     nextButton.classList.remove('disabled');
                     nextButton.disabled = false;
                 });
