@@ -233,6 +233,5 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
             return View(new List<Veterinarian>());
         }
-
     }
 }

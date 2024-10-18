@@ -65,50 +65,29 @@ namespace KoiVetenary.MVCWebApp.Controllers
 
 
         // GET: Appointments/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments/" + id))
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var content = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<KoiVetenaryResult>(content);
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments/" + id))
+        //        {
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                var content = await response.Content.ReadAsStringAsync();
+        //                var result = JsonConvert.DeserializeObject<KoiVetenaryResult>(content);
 
-                        if (result != null && result.Data != null)
-                        {
-                            var data = JsonConvert.DeserializeObject<Appointment>(result.Data.ToString());
+        //                if (result != null && result.Data != null)
+        //                {
+        //                    var data = JsonConvert.DeserializeObject<Appointment>(result.Data.ToString());
 
-                            return View(data);
-                        }
-                    }
-                }
-            }
+        //                    return View(data);
+        //                }
+        //            }
+        //        }
+        //    }
 
-            return View(new Appointment());
-            //var appointment = new Appointment();
-
-            //using (var httpClient = new HttpClient())
-            //{
-            //    using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments/" + id))
-            //    {
-            //        if (response.IsSuccessStatusCode)
-            //        {
-            //            var content = await response.Content.ReadAsStringAsync();
-            //            var result = JsonConvert.DeserializeObject<KoiVetenaryResult>(content);
-
-            //            if (result != null && result.Data != null)
-            //            {
-            //                appointment = JsonConvert.DeserializeObject<Appointment>(result.Data.ToString());
-            //                return View(appointment);
-            //            }
-            //        }
-            //    }
-            //}
-
-            //return View(new Appointment());
-        }
+        //    return View(new Appointment());
+        //}
 
         //GET: Appointments/Create
         [HttpGet]

@@ -15,6 +15,7 @@ namespace KoiVetenary.Service
         Task<IKoiVetenaryResult> GetAppointmentDetailsAsync();
 
         Task<IKoiVetenaryResult> UpdateDetailAppointmentServiceID(int appointmentId, int serviceId);
+        Task<IKoiVetenaryResult> CreateAppointmentDetailAsync(AppointmentDetail appointment);
     }
     public class AppointmentDetailService : IAppointmentDetailService
     {
@@ -39,27 +40,6 @@ namespace KoiVetenary.Service
                 else
                 {
                     return new KoiVetenaryResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
-            }
-        }
-
-        public async Task<IKoiVetenaryResult> UpdateDetailAppointmentServiceID(int appointmentId, int serviceId)
-        {
-            try
-            {
-                var result = await _unitOfWork.AppointmentDetailRepository.UpdateServiceId(appointmentId, serviceId);
-
-                if (result)
-                {
-                    return new KoiVetenaryResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG, result);
-                }
-                else
-                {
-                    return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
             }
             catch (Exception ex)

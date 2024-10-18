@@ -32,5 +32,13 @@ namespace KoiVetenary.APIService.Controllers
             return await _appointmentDetailService.UpdateDetailAppointmentServiceID(appointmentId, serviceId);
         }
         
+        [HttpPost]
+        public async Task<IKoiVetenaryResult> Create([FromBody] AppointmentDetail appointment)
+        {
+            return await _appointmentDetailService.CreateAppointmentDetailAsync(appointment);
+        }
+
+        // GET: Appoin/Details/5
+
     }
 }

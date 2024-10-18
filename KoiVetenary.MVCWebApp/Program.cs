@@ -4,6 +4,8 @@ using KoiVetenary.Service;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Microsoft.EntityFrameworkCore;
+using KoiVetenary.Business;
+using Newtonsoft.Json;
 
 namespace KoiVetenary.MVCWebApp
 {
@@ -16,9 +18,8 @@ namespace KoiVetenary.MVCWebApp
 
             builder.Services.AddControllersWithViews();
             builder.Services.ConfigureServiceService(builder.Configuration);
-           
 
-            //
+
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
