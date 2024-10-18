@@ -63,6 +63,7 @@ namespace KoiVetenary.Data
         public MedicalRecordRepository MedicalRecordRepository
         {
             get { return _medicalRecord ??= new MedicalRecordRepository(); }
+        }
         public AnimalTypeRepository AnimalTypeRepository
         {
             get { return _animalType ??= new AnimalTypeRepository(); }

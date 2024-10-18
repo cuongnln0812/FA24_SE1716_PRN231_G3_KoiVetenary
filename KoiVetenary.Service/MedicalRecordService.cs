@@ -33,6 +33,8 @@ namespace KoiVetenary.Service
         {
             try
             {
+                medicalRecord.CreatedDate = DateTime.Now;
+                medicalRecord.CreatedBy = "Admin";
                 int result = await _unitOfWork.MedicalRecordRepository.CreateAsync(medicalRecord);
                 if (result > 0)
                 {
@@ -128,6 +130,18 @@ namespace KoiVetenary.Service
                 }
                 else
                 {
+                    var animal = await _unitOfWork.AnimalRepository.GetByIdAsync((int)medicalRecord.AnimalId);
+                    if (animal == null)
+                    {
+                        return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Animal is not found!");
+                    }
+
+                    medicalRecord.Animal = animal;
+                    medicalRecord.UpdatedDate = DateTime.Now;
+                    medicalRecord.CreatedDate = entity.CreatedDate;
+                    medicalRecord.CreatedBy = entity.CreatedBy;
+                    medicalRecord.ModifiedBy = "Admin";
+
                     var result = await _unitOfWork.MedicalRecordRepository.UpdateAsync(medicalRecord);
 
                     if (result > 0)
