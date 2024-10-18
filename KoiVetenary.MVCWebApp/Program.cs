@@ -1,6 +1,8 @@
 
 using KoiVetenary.Data.Models;
 using KoiVetenary.Service;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using Microsoft.EntityFrameworkCore;
 
 namespace KoiVetenary.MVCWebApp
@@ -40,3 +42,4 @@ namespace KoiVetenary.MVCWebApp
         }
     }
 }
+

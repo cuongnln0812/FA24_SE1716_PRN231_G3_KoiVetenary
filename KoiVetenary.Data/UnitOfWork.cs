@@ -1,4 +1,4 @@
-﻿using KoiVetenary.Data.Models;
+using KoiVetenary.Data.Models;
 using KoiVetenary.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ namespace KoiVetenary.Data
         private AnimalRepository _animal;
         private ServiceRepository _service;
         private CategoryRepository _category;
+        private VeterinarianRepository _veterinarian;
         private AppointmentRepository _appointment;
         private AppointmentDetailRepository _appointmentDetail;
         private OwnerRepository _owner;
@@ -37,6 +38,11 @@ namespace KoiVetenary.Data
             get { return _category ??= new CategoryRepository(); }
         }
 
+        public VeterinarianRepository VeterinarianRepository
+        {
+            get { return _veterinarian ??= new VeterinarianRepository(_unitOfWorkContext); }
+        }
+
         public AppointmentRepository AppointmentRepository
         {
             get { return _appointment ??= new AppointmentRepository(); }
@@ -51,7 +57,6 @@ namespace KoiVetenary.Data
         {
             get { return _owner ??= new OwnerRepository(); }
         }
-
 
         ////TO-DO CODE HERE/////////////////
 

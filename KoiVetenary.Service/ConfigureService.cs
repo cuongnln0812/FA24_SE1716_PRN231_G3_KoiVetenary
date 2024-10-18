@@ -16,6 +16,7 @@ namespace KoiVetenary.Service
             services.AddScoped<IAnimalService, AnimalService>();
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IVeterinarianService, VeterinarianService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IAppointmentDetailService, AppointmentDetailService>();
             services.AddScoped<IOwnerService, OwnerService>();
