@@ -1,4 +1,4 @@
-﻿@model KoiVetenary.Data.Models.MedicalRecord
+﻿@* @model KoiVetenary.Data.Models.MedicalRecord
 
 @{
     ViewData["Title"] = "Create";
@@ -61,26 +61,6 @@
                 <input asp-for="FollowUpDate" class="form-control" />
                 <span asp-validation-for="FollowUpDate" class="text-danger"></span>
             </div>
-@*             <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-            </div> *@
-@*             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedDate" class="control-label"></label>
-                <input asp-for="UpdatedDate" class="form-control" />
-                <span asp-validation-for="UpdatedDate" class="text-danger"></span>
-            </div> *@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -94,4 +74,124 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+ *@
+
+ @model KoiVetenary.Data.Models.MedicalRecord
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Medical Record</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="medicalRecordForm">
+            <div class="form-group">
+                <label for="AnimalId">Animal</label>
+                <select id="AnimalId" name="AnimalId" class="form-control">
+                    <!-- Options will be loaded via AJAX -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="RecordDate">Record Date</label>
+                <input type="date" id="RecordDate" name="RecordDate" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Symptoms">Symptoms</label>
+                <input type="text" id="Symptoms" name="Symptoms" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Diagnosis">Diagnosis</label>
+                <input type="text" id="Diagnosis" name="Diagnosis" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Treatment">Treatment</label>
+                <input type="text" id="Treatment" name="Treatment" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Medications">Medications</label>
+                <input type="text" id="Medications" name="Medications" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="LabResults">Lab Results</label>
+                <input type="text" id="LabResults" name="LabResults" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="VetNotes">Vet Notes</label>
+                <input type="text" id="VetNotes" name="VetNotes" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="FollowUpRequired">Follow Up Required</label>
+                <input type="checkbox" id="FollowUpRequired" name="FollowUpRequired" />
+            </div>
+            <div class="form-group">
+                <label for="FollowUpDate">Follow Up Date</label>
+                <input type="date" id="FollowUpDate" name="FollowUpDate" class="form-control" />
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="submitForm()" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/MedicalRecords">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadAnimals();
+        });
+
+        function loadAnimals() {
+            $.ajax({
+                url: 'https://localhost:7238/api/Animals',
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+                    var animalSelect = $('#AnimalId');
+                    $.each(result.data, function (index, animal) {
+                        animalSelect.append('<option value="' + animal.animalId + '">' + animal.name + '</option>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert('Error loading animals: ' + xhr.statusText);
+                }
+            });
+        }
+
+        function submitForm() {
+            var medicalRecord = {
+                AnimalId: $('#AnimalId').val(),
+                RecordDate: $('#RecordDate').val(),
+                Symptoms: $('#Symptoms').val(),
+                Diagnosis: $('#Diagnosis').val(),
+                Treatment: $('#Treatment').val(),
+                Medications: $('#Medications').val(),
+                LabResults: $('#LabResults').val(),
+                VetNotes: $('#VetNotes').val(),
+                FollowUpRequired: $('#FollowUpRequired').is(':checked'),
+                FollowUpDate: $('#FollowUpDate').val()
+            };
+
+            $.ajax({
+                url: 'https://localhost:7238/api/MedicalRecord',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(medicalRecord),
+                success: function (result) {
+                    alert('Medical Record created successfully');
+                    window.location.href = '/MedicalRecords';
+                },
+                error: function (xhr, status, error) {
+                    alert('Error creating medical record: ' + xhr.statusText);
+                }
+            });
+        }
+    </script>
 }
