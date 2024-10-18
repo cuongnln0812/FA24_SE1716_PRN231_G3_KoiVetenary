@@ -52,57 +52,76 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <label for="appointmentId" class="form-label">Appointment ID</label>
                             <input type="number" class="form-control" id="appointmentId" name="appointmentId" />
                         </div>
-                        <div class="col-md-4">
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="animalId" class="form-label">Animal ID</label>
                             <input type="number" class="form-control" id="animalId" name="animalId" />
                         </div>
-                        <div class="col-md-4">
+                    </div>
+
+                    @* <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="veterinarianId" class="form-label">Veterinarian ID</label>
                             <input type="number" class="form-control" id="veterinarianId" name="veterinarianId" />
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <label for="serviceId" class="form-label">Service ID</label>
                             <input type="number" class="form-control" id="serviceId" name="serviceId" />
                         </div>
-                        <div class="col-md-4">
+                    </div> *@
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="serviceDate" class="form-label">Service Date</label>
                             <input type="date" class="form-control" id="serviceDate" name="serviceDate" />
-                        </div>
-                        <div class="col-md-4">
-                            <label for="serviceTime" class="form-label">Service Time</label>
-                            <input type="time" class="form-control" id="serviceTime" name="serviceTime" />
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
+                            <label for="serviceTime" class="form-label">Service Time</label>
+                            <input type="text" class="form-control" id="serviceTime" name="serviceTime" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="status" class="form-label">Status</label>
                             <input type="text" class="form-control" id="status" name="status" />
                         </div>
-                        <div class="col-md-4">
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="notes" class="form-label">Notes</label>
                             <textarea class="form-control" id="notes" name="notes"></textarea>
                         </div>
-                        <div class="col-md-4">
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="serviceDuration" class="form-label">Service Duration (minutes)</label>
                             <input type="number" class="form-control" id="serviceDuration" name="serviceDuration" />
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <label for="serviceCost" class="form-label">Service Cost</label>
                             <input type="number" class="form-control" id="serviceCost" name="serviceCost" />
                         </div>
                     </div>
                 </div>
+
 
                 <div class="modal-footer">
                     <button id="btSave" type="button" class="btn btn-primary">Save</button>
@@ -176,8 +195,8 @@
                     appointmentDetailId: 0,
                     appointmentId: $("#appointmentId").val(),
                     animalId: $("#animalId").val(),
-                    veterinarianId: $("#veterinarianId").val(),
-                    serviceId: $("#serviceId").val(),
+                    // veterinarianId: $("#veterinarianId").val(),
+                    // serviceId: $("#serviceId").val(),
                     serviceTime: $("#serviceTime").val(),
                     status: $("#status").val(),
                     notes: $("#notes").val(),
@@ -187,7 +206,9 @@
                 success: function (result) {
                     if (result.status >= 1) {
                         $('#appointmentDetailModal').modal('hide');
-                        loadData();
+                        localStorage.setItem('savedAppointmentDetailId', result.data);
+                        console.log(localStorage.getItem('savedAppointmentDetailId'));
+                        window.location.href = '/ChoosePlan/Index';
                     }
                 },
                 error: function (xhr, error) {

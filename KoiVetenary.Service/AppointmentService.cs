@@ -17,8 +17,7 @@ namespace KoiVetenary.Service
     }
     public class AppointmentService : IAppointmentService
     {
-
-        private readonly UnitOfWork _unitOfWork;
+        private readonly UnitOfWork _unitOfWork; 
 
         public AppointmentService()
         {
@@ -29,7 +28,18 @@ namespace KoiVetenary.Service
         {
             try
             {
-
+                var owner = _unitOfWork.OwnerRepository.GetById((int)appointment.OwnerId);
+                if (owner == null) {
+                    return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Owner not found");
+                }
+                if (IsPastAppointment(appointment.AppointmentDate, appointment.AppointmentTime))
+                {
+                    return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Appointment Date and Time cannot in the past");
+                }
+                appointment.CreatedDate = DateTime.Now;
+                appointment.UpdatedDate = DateTime.Now;
+                appointment.CreatedBy = owner.FirstName + owner.LastName;
+                appointment.ModifiedBy = owner.FirstName + owner.LastName;
                 int result = await _unitOfWork.AppointmentRepository.CreateAsync(appointment);
                 if (result > 0)
                 {
@@ -121,6 +131,12 @@ namespace KoiVetenary.Service
         {
             try
             {
+                var owner = _unitOfWork.OwnerRepository.GetById((int)appointment.OwnerId);
+                if (owner == null)
+                {
+                    return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Owner not found");
+                }
+
                 var existed = await _unitOfWork.AppointmentRepository.GetByIdAsync(appointment.AppointmentId);
                 if (existed == null)
                 {
@@ -135,7 +151,7 @@ namespace KoiVetenary.Service
                 existed.TotalCost = appointment.TotalCost;
                 existed.ModifiedBy = "admin";
                 existed.UpdatedDate = DateTime.Now;
-                existed.OwnerId = appointment.OwnerId;
+                existed.Owner = owner;
 
                 _unitOfWork.AppointmentRepository.PrepareUpdate(existed);
 
@@ -158,5 +174,21 @@ namespace KoiVetenary.Service
                 return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.ToString());
             }
         }
+
+        public bool IsPastAppointment(DateTime? appointmentDate, TimeSpan? appointmentTime)
+        {
+            // Check if either the date or time is null
+            if (!appointmentDate.HasValue || !appointmentTime.HasValue)
+            {
+                return false; // or handle this case as you see fit
+            }
+
+            // Combine the appointment date and time
+            DateTime appointmentDateTime = appointmentDate.Value.Date.Add(appointmentTime.Value);
+
+            // Check if the combined date and time is in the past
+            return appointmentDateTime < DateTime.Now;
+        }
+
     }
 }

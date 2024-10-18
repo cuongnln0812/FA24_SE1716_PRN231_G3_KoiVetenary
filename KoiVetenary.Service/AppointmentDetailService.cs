@@ -53,7 +53,7 @@ namespace KoiVetenary.Service
                 int result = await _unitOfWork.AppointmentDetailRepository.CreateAsync(appointment);
                 if (result > 0)
                 {
-                    return new KoiVetenaryResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                    return new KoiVetenaryResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result);
                 }
                 else
                 {
