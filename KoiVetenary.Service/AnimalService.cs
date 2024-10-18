@@ -192,9 +192,7 @@ namespace KoiVetenary.Service
                 }
 
                 existingAnimal.Name = animalRequest.Name;
-                existingAnimal.OwnerId = animalRequest.OwnerId;
                 existingAnimal.Species = animalRequest.Species;
-                existingAnimal.TypeId = animalRequest.TypeId;
                 existingAnimal.Origin = animalRequest.Origin;
                 existingAnimal.DateOfBirth = animalRequest.DateOfBirth;
                 existingAnimal.Age = animalRequest.Age;
@@ -207,6 +205,8 @@ namespace KoiVetenary.Service
                 existingAnimal.LastCheckup = DateTime.Now;
                 existingAnimal.ModifiedBy = "Admin";
                 existingAnimal.UpdatedDate = DateTime.Now;
+                existingAnimal.Type = animalType;
+                existingAnimal.Owner = owner;
 
                 int result = await _unitOfWork.AnimalRepository.UpdateAsync(existingAnimal);
                 if (result > 0)
