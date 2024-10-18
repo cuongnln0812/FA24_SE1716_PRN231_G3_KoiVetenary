@@ -248,7 +248,7 @@ namespace KoiVetenary.Data.Base
         public T GetById(string code)
         {
             var entity = _context.Set<T>().Find(code);
-            if(entity != null)
+            if (entity != null)
             {
                 _context.Entry(entity).State = EntityState.Detached;
             }
@@ -257,13 +257,18 @@ namespace KoiVetenary.Data.Base
 
         public async Task<T> GetByIdAsync(string code)
         {
-            return await _context.Set<T>().FindAsync(code);
+            var entity = await _context.Set<T>().FindAsync(code);
+            if (entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
         }
 
         public T GetById(Guid code)
         {
             var entity = _context.Set<T>().Find(code);
-            if(entity != null)
+            if (entity != null)
             {
                 _context.Entry(entity).State = EntityState.Detached;
             }
@@ -272,7 +277,12 @@ namespace KoiVetenary.Data.Base
 
         public async Task<T> GetByIdAsync(Guid code)
         {
-            return await _context.Set<T>().FindAsync(code);
+            var entity = await _context.Set<T>().FindAsync(code);
+            if (entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
         }
     }
 }

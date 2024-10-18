@@ -1,0 +1,201 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row">
+    <div class="col-md-10">
+        <h3 class="display-8">Bank List</h3>
+    </div>
+    <div class="col-md-2 text-end">
+        <button type="button" class="btn btn-primary" onclick="add();">
+            Add
+        </button>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr class="card-header">
+                    <th class="card-title text-center">AppointmentDetail Id</th>
+                    <th class="card-title text-center">Appointment Id</th>
+                    <th class="card-title text-center">Animal Id</th>
+                    <th class="card-title text-center">Veterinarian Id</th>
+                    <th class="card-title text-center">Service Id</th>
+                    <th class="card-title text-center">Service Date</th>
+                    <th class="card-title text-center">Service Time</th>
+                    <th class="card-title text-center">Status</th>
+                    <th class="card-title text-center">Notes</th>
+                    <th class="card-title text-center">Service Duration</th>
+                    <th class="card-title text-center">Service Cost</th>
+                </tr>
+            </thead>
+            <tbody class="tblAppointmentDetails">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="appointmentDetailModal" tabindex="-1" aria-labelledby="appointmentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="appointmentDetailModalLabel">Appointment Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="appointmentId" class="form-label">Appointment ID</label>
+                            <input type="number" class="form-control" id="appointmentId" name="appointmentId" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="animalId" class="form-label">Animal ID</label>
+                            <input type="number" class="form-control" id="animalId" name="animalId" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="veterinarianId" class="form-label">Veterinarian ID</label>
+                            <input type="number" class="form-control" id="veterinarianId" name="veterinarianId" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="serviceId" class="form-label">Service ID</label>
+                            <input type="number" class="form-control" id="serviceId" name="serviceId" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="serviceDate" class="form-label">Service Date</label>
+                            <input type="date" class="form-control" id="serviceDate" name="serviceDate" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="serviceTime" class="form-label">Service Time</label>
+                            <input type="time" class="form-control" id="serviceTime" name="serviceTime" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="status" class="form-label">Status</label>
+                            <input type="text" class="form-control" id="status" name="status" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes"></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="serviceDuration" class="form-label">Service Duration (minutes)</label>
+                            <input type="number" class="form-control" id="serviceDuration" name="serviceDuration" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="serviceCost" class="form-label">Service Cost</label>
+                            <input type="number" class="form-control" id="serviceCost" name="serviceCost" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="btSave" type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        function add() {
+            $("#appointmentDetailModalContent").html("");
+            $("#appointmentDetailModalLabel").html("Add New");
+            $('#appointmentDetailModal').modal('show');
+        }
+
+        $(document).ready(function () {
+            loadData();
+        });
+
+        function loadData() {
+            alert("Load data progressing ...");
+
+            $.ajax({
+                url: 'https://localhost:7238/api/AppointmentDetail',
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    alert('Server response: ' + result.message);
+                    console.log(result);
+                    var html = '';
+                    $.each(result.data, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.appointmentDetailId + '</td>';
+                        html += '<td>' + item.appointmentId + '</td>';
+                        html += '<td>' + item.animalId + '</td>';
+                        html += '<td>' + item.veterinarianId + '</td>';
+                        html += '<td>' + item.serviceId + '</td>';
+                        html += '<td>' + item.serviceDate + '</td>';
+                        html += '<td>' + item.serviceTime + '</td>';
+                        html += '<td>' + item.status + '</td>';
+                        html += '<td>' + item.notes + '</td>';
+                        html += '<td>' + item.serviceDuration + '</td>';
+                        html += '<td>' + item.serviceCost + '</td>';
+                        html += '<td></td>';
+                        html += '</tr>';
+                    });
+                    $('.tblAppointmentDetails').html(html);
+                },
+                error: function (xhr, error) {
+                    alert(xhr.statusText);
+                }
+            });
+        }
+
+        $("#btSave").click(function () {
+            $.ajax({
+                type: 'POST',
+                url: 'https://localhost:7238/api/AppointmentDetail',
+                headers: {
+                    'Accept': 'text/plain',
+                    'Content-Type': "application/json;charset=utf-8"
+                },
+                data: JSON.stringify({
+                    appointmentDetailId: 0,
+                    appointmentId: $("#appointmentId").val(),
+                    animalId: $("#animalId").val(),
+                    veterinarianId: $("#veterinarianId").val(),
+                    serviceId: $("#serviceId").val(),
+                    serviceTime: $("#serviceTime").val(),
+                    status: $("#status").val(),
+                    notes: $("#notes").val(),
+                    serviceDuration: $("#serviceDuration").val(),
+                    serviceCost: $("#serviceCost").val
+                }),
+                success: function (result) {
+                    if (result.status >= 1) {
+                        $('#appointmentDetailModal').modal('hide');
+                        loadData();
+                    }
+                },
+                error: function (xhr, error) {
+                    alert(xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        });
+
+    </script>
+}

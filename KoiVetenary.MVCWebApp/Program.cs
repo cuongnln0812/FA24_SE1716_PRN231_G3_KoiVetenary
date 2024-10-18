@@ -1,40 +1,45 @@
-using KoiVetenary.Business;
+
+using KoiVetenary.Data.Models;
 using KoiVetenary.Service;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
 
-
-builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IServiceService, ServiceService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: MyAllowSpecificOrigins,
-//                      policy =>
-//                      {
-//                          policy.WithOrigins("https://localhost:7238/api/Services");
-//                      });
-//});
-//
-
-var app = builder.Build();
-
-
-if (!app.Environment.IsDevelopment())
+namespace KoiVetenary.MVCWebApp
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+
+            builder.Services.AddControllersWithViews();
+            builder.Services.ConfigureServiceService(builder.Configuration);
+           
+
+            //
+            var app = builder.Build();
+
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.Run();
+        }
+    }
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-//app.UseCors();
-app.UseAuthorization();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-//
-app.Run();

@@ -41,7 +41,8 @@ namespace KoiVetenary.Data.Models
             return connectionString;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection"));
+            => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection")).UseQueryTrackingBehavior
+            (QueryTrackingBehavior.NoTracking);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

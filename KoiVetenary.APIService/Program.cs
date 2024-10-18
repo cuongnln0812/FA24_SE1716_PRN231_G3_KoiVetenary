@@ -1,7 +1,8 @@
+using KoiVetenary.Data.Models;
 using KoiVetenary.Service;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.OpenApi.Writers;
-using KoiVetenary.Data.Models;
+
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.ModelBuilder;
 using System.Text.Json.Serialization;
@@ -19,6 +20,8 @@ namespace KoiVetenary.APIService
             //builder.Services.AddEndpointsApiExplorer();
             builder.Services.ConfigureServiceService(builder.Configuration);
             builder.Services.AddControllers();
+            //builder.Services.AddControllers().AddNewtonsoftJson(x =>
+            //                 x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;

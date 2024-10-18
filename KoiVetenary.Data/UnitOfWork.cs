@@ -1,4 +1,4 @@
-﻿using KoiVetenary.Data.Models;
+using KoiVetenary.Data.Models;
 using KoiVetenary.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,9 @@ namespace KoiVetenary.Data
         private ServiceRepository _service;
         private CategoryRepository _category;
         private VeterinarianRepository _veterinarian;
+        private AppointmentRepository _appointment;
+        private AppointmentDetailRepository _appointmentDetail;
+        private OwnerRepository _owner;
 
         public UnitOfWork()
         {
@@ -24,21 +27,37 @@ namespace KoiVetenary.Data
         {
             get { return _animal ??= new AnimalRepository(); }
         }
-        //
+
         public ServiceRepository ServiceRepository
         {
-            get { return _service ??= new ServiceRepository(_unitOfWorkContext); }
+            get { return _service ??= new ServiceRepository(); }
         }
-        //
+
         public CategoryRepository CategoryRepository
         {
-            get { return _category ??= new CategoryRepository(_unitOfWorkContext); }
+            get { return _category ??= new CategoryRepository(); }
         }
-        //
+
         public VeterinarianRepository VeterinarianRepository
         {
             get { return _veterinarian ??= new VeterinarianRepository(_unitOfWorkContext); }
         }
+
+        public AppointmentRepository AppointmentRepository
+        {
+            get { return _appointment ??= new AppointmentRepository(); }
+        }
+
+        public AppointmentDetailRepository AppointmentDetailRepository
+        {
+            get { return _appointmentDetail ??= new AppointmentDetailRepository(); }
+        }
+
+        public OwnerRepository OwnerRepository
+        {
+            get { return _owner ??= new OwnerRepository(); }
+        }
+
         ////TO-DO CODE HERE/////////////////
 
         #region Set transaction isolation levels
