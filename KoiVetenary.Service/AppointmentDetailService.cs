@@ -13,6 +13,7 @@ namespace KoiVetenary.Service
     public interface IAppointmentDetailService
     {
         Task<IKoiVetenaryResult> GetAppointmentDetailsAsync();
+        Task<IKoiVetenaryResult> CreateAppointmentDetailAsync(AppointmentDetail appointment);
     }
     public class AppointmentDetailService : IAppointmentDetailService
     {
@@ -44,5 +45,26 @@ namespace KoiVetenary.Service
                 return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+        public async Task<IKoiVetenaryResult> CreateAppointmentDetailAsync(AppointmentDetail appointment)
+        {
+            try
+            {
+
+                int result = await _unitOfWork.AppointmentDetailRepository.CreateAsync(appointment);
+                if (result > 0)
+                {
+                    return new KoiVetenaryResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
     }
 }
