@@ -82,7 +82,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         // GET: MedicalRecord/Create
         public async Task<IActionResult> CreateAsync()
         {
-            ViewData["AnimalId"] = new SelectList(await this.GetAnimals(), "AnimalId", "AnimalId");
+            ViewData["AnimalId"] = new SelectList(await this.GetAnimals(), "AnimalId", "Name");
             return View();
         }
 
@@ -173,7 +173,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             {
                 Console.WriteLine($"Exception occurred: {ex.Message}");
             }
-
+            ViewData["AnimalId"] = new SelectList(await this.GetAnimals(), "AnimalId", "Name");
             return View(medicalRecord);
         }
 
@@ -190,7 +190,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
                 {
                     using (var httpClient = new HttpClient())
                     {
-                        using (var response = await httpClient.PutAsJsonAsync(Const.API_Endpoint + "MedicalRecord/" + id, medicalRecord))
+                        using (var response = await httpClient.PutAsJsonAsync(Const.API_Endpoint + "MedicalRecord/", medicalRecord))
                         {
                             if (response.IsSuccessStatusCode)
                             {
@@ -248,7 +248,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             {
                 Console.WriteLine($"Exception occurred: {ex.Message}");
             }
-
+            ViewData["AnimalId"] = new SelectList(await this.GetAnimals(), "AnimalId", "Name");
             return View(medicalRecord);
         }
 
