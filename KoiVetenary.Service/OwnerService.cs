@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KoiVetenary.Service.DTO.Owner;
 
 namespace KoiVetenary.Service
 {
@@ -44,6 +45,7 @@ namespace KoiVetenary.Service
 
         public async Task<IKoiVetenaryResult> GetOwnersAsync()
         {
+
             var owners = await _unitOfWork.OwnerRepository.GetAllWithoutAppointmentsAsync();
 
             if (owners == null || !owners.Any())
