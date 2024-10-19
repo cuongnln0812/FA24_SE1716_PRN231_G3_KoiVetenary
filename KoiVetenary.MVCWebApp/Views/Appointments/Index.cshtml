@@ -9,7 +9,6 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-
 <table class="table">
     <thead>
         <tr>
@@ -20,7 +19,16 @@
                 @Html.DisplayNameFor(model => model.AppointmentTime)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ContactEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactPhone)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpecialRequests)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Notes)
@@ -53,13 +61,22 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AppointmentDate)
+                @Html.DisplayFor(modelItem => item.AppointmentDate, "{0:yyyy-MM-dd}")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AppointmentTime)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.ContactEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactPhone)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpecialRequests)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Notes)

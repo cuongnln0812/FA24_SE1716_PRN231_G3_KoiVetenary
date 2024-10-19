@@ -22,7 +22,6 @@ namespace KoiVetenary.Service
     }
     public class AnimalService : IAnimalService
     {
-
         private readonly UnitOfWork _unitOfWork;
 
         public AnimalService() {

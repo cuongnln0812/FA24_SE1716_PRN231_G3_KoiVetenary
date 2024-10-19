@@ -44,8 +44,7 @@ namespace KoiVetenary.Service
 
         public async Task<IKoiVetenaryResult> GetOwnersAsync()
         {
-
-            var owners = await _unitOfWork.OwnerRepository.GetAllWithoutAppointmentsAsync();
+            var owners = await _unitOfWork.OwnerRepository.GetAllAsync();
 
             if (owners == null || !owners.Any())
 
