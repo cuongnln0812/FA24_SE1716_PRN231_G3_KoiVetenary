@@ -12,12 +12,12 @@ namespace KoiVetenary.Data.Models
         public int? AnimalId { get; set; }
         public int? VeterinarianId { get; set; }
         public int? ServiceId { get; set; }
-        public DateTime? ServiceDate { get; set; }
-        public TimeSpan? ServiceTime { get; set; }
-        public string Status { get; set; }
+        public string AnimalStatus { get; set; }
+        public string EmergencyInstructions { get; set; }
+        public string Allergies { get; set; }
+        public string GroomingNeeds { get; set; }
+        public string SpecialNeeds { get; set; }
         public string Notes { get; set; }
-        public int? ServiceDuration { get; set; }
-        public decimal? ServiceCost { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? CreatedDate { get; set; }

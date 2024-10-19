@@ -1,4 +1,5 @@
-﻿using KoiVetenary.Data.Base;
+﻿using KoiVetenary.Common;
+using KoiVetenary.Data.Base;
 using KoiVetenary.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,6 +17,11 @@ namespace KoiVetenary.Data.Repositories
         public async Task<List<Appointment>> GetAllAsync()
         {
             return await _context.Appointments.Include(a => a.Owner).ToListAsync();
+        }
+
+        public async Task<List<Appointment>> GetAllPendingAsync()
+        {
+            return await _context.Appointments.Include(a => a.Owner).Where(a => a.Status.Equals(AppointmentStatus.Pending)).ToListAsync();
         }
 
         public async Task<Appointment> GetByIdAsync(int id)
