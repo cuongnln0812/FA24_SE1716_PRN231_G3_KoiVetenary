@@ -28,5 +28,29 @@ namespace KoiVetenary.Data.Repositories
             }
             return entity;
         }
+
+        public async Task<List<MedicalRecord>> SearchMedicalRecordsAsync(string? searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                // Return all records if no search term is provided
+                return await _context.MedicalRecords.Include(a => a.Animal).ToListAsync();
+            }
+
+            // Convert search term to lowercase for case-insensitive search
+            searchTerm = searchTerm.ToLower();
+
+            // Search across multiple fields using OR condition with case-insensitive comparison
+            var query = _context.MedicalRecords.Include(a => a.Animal)
+                                               .Where(m => m.Symptoms.ToLower().Contains(searchTerm) ||
+                                                           m.Diagnosis.ToLower().Contains(searchTerm) ||
+                                                           m.Treatment.ToLower().Contains(searchTerm) ||
+                                                           m.Medications.ToLower().Contains(searchTerm) ||
+                                                           m.LabResults.ToLower().Contains(searchTerm) ||
+                                                           m.VetNotes.ToLower().Contains(searchTerm));
+
+            return await query.ToListAsync();
+        }
+
     }
 }

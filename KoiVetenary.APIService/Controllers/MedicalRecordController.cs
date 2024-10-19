@@ -45,5 +45,12 @@ namespace KoiVetenary.APIService.Controllers
         {
             return await _medicalRecordService.DeleteMedicalRecord(id);
         }
+
+        // GET: api/MedicalRecord/search?searchTerm={term}
+        [HttpGet("search")]
+        public async Task<IKoiVetenaryResult> SearchMedicalRecordsAsync([FromQuery] string searchTerm)
+        {
+            return await _medicalRecordService.SearchByKeyword(searchTerm);
+        }
     }
 }
