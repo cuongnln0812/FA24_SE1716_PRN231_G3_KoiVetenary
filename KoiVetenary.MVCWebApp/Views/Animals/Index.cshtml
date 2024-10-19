@@ -9,6 +9,18 @@
 <p>
     <a asp-action="Create" class="btn btn-primary">Create</a>
 </p>
+
+<div class="container mt-4">
+    <form method="get" asp-action="Index" class="w-100">
+        <div class="input-group mb-2">
+            <input type="text" name="searchTerm" class="form-control" placeholder="Search animals..." aria-label="Search" />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <table class="table">
     <thead>
         <tr>

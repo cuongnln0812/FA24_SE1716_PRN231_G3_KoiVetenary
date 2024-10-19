@@ -27,5 +27,13 @@ namespace KoiVetenary.Data.Repositories
             }
             return entity;
         }
+
+        public IQueryable<Animal> GetQueryable()
+        {
+            return _context.Animals
+                           .Include(a => a.Owner)
+                           .Include(a => a.Type)
+                           .AsQueryable();
+        }
     }
 }
