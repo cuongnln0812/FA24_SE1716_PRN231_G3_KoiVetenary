@@ -116,7 +116,23 @@ namespace KoiVetenary.Service
 
         public async Task<IKoiVetenaryResult> SearchByKeyword(string? searchTerm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _unitOfWork.MedicalRecordRepository.SearchMedicalRecordsAsync(searchTerm);
+
+                if (result.Any())
+                {
+                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_READ_CODE, "No records found matching the search criteria");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
         }
 
         public async Task<IKoiVetenaryResult> UpdateMedicalRecord(MedicalRecord medicalRecord)
