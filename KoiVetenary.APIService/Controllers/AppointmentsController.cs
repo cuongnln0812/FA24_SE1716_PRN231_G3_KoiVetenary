@@ -34,9 +34,15 @@ namespace KoiVetenary.APIService.Controllers
             //return View(await fA24_SE1716_PRN231_G3_KoiVetenaryContext.ToListAsync());
         }
 
+        [HttpGet("Pending")]
+        public async Task<IKoiVetenaryResult> GetPendingAppoinentAsync()
+        {
+            return await _appointmentService.GetPendingAppointmentsAsync();
+        }
+
         //GET: Appointments/Details/5
         [HttpGet("{id}")]
-        public async Task<IKoiVetenaryResult> Details( int? id)
+        public async Task<IKoiVetenaryResult> GetAppointmentDetail( int? id)
         {
             return await _appointmentService.GetAppointmentByIdAsync(id);
         }
@@ -45,7 +51,7 @@ namespace KoiVetenary.APIService.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IKoiVetenaryResult> Create([FromBody] Appointment appointment)
+        public async Task<IKoiVetenaryResult> CreateAppointment([FromBody] Appointment appointment)
         {
             return await _appointmentService.CreateAppointment(appointment);
         }

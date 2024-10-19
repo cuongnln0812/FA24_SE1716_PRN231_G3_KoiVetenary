@@ -100,7 +100,7 @@ namespace KoiVetenary.Data.Models
             modelBuilder.Entity<AnimalType>(entity =>
             {
                 entity.HasKey(e => e.TypeId)
-                    .HasName("PK__AnimalTy__516F03950E2B1A8F");
+                    .HasName("PK__AnimalTy__516F0395387DDE85");
 
                 entity.Property(e => e.TypeId).HasColumnName("TypeID");
 
@@ -115,6 +115,10 @@ namespace KoiVetenary.Data.Models
 
                 entity.Property(e => e.AppointmentDate).HasColumnType("date");
 
+                entity.Property(e => e.ContactEmail).HasMaxLength(50);
+
+                entity.Property(e => e.ContactPhone).HasMaxLength(20);
+
                 entity.Property(e => e.CreatedBy).HasMaxLength(50);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
@@ -124,6 +128,8 @@ namespace KoiVetenary.Data.Models
                 entity.Property(e => e.Notes).HasMaxLength(500);
 
                 entity.Property(e => e.OwnerId).HasColumnName("OwnerID");
+
+                entity.Property(e => e.SpecialRequests).HasMaxLength(500);
 
                 entity.Property(e => e.Status).HasMaxLength(20);
 
@@ -141,7 +147,11 @@ namespace KoiVetenary.Data.Models
             {
                 entity.Property(e => e.AppointmentDetailId).HasColumnName("AppointmentDetailID");
 
+                entity.Property(e => e.Allergies).HasMaxLength(500);
+
                 entity.Property(e => e.AnimalId).HasColumnName("AnimalID");
+
+                entity.Property(e => e.AnimalStatus).HasMaxLength(500);
 
                 entity.Property(e => e.AppointmentId).HasColumnName("AppointmentID");
 
@@ -149,17 +159,17 @@ namespace KoiVetenary.Data.Models
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
+                entity.Property(e => e.EmergencyInstructions).HasMaxLength(500);
+
+                entity.Property(e => e.GroomingNeeds).HasMaxLength(500);
+
                 entity.Property(e => e.ModifiedBy).HasMaxLength(50);
 
                 entity.Property(e => e.Notes).HasMaxLength(500);
 
-                entity.Property(e => e.ServiceCost).HasColumnType("decimal(10, 2)");
-
-                entity.Property(e => e.ServiceDate).HasColumnType("date");
-
                 entity.Property(e => e.ServiceId).HasColumnName("ServiceID");
 
-                entity.Property(e => e.Status).HasMaxLength(50);
+                entity.Property(e => e.SpecialNeeds).HasMaxLength(500);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
@@ -212,7 +222,7 @@ namespace KoiVetenary.Data.Models
             modelBuilder.Entity<MedicalRecord>(entity =>
             {
                 entity.HasKey(e => e.RecordId)
-                    .HasName("PK__MedicalR__FBDF78C9C4D55ACD");
+                    .HasName("PK__MedicalR__FBDF78C926E608BA");
 
                 entity.Property(e => e.RecordId).HasColumnName("RecordID");
 

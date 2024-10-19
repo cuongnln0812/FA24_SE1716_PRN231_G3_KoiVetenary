@@ -13,6 +13,9 @@ namespace KoiVetenary.Service
     public interface IAppointmentDetailService
     {
         Task<IKoiVetenaryResult> GetAppointmentDetailsAsync();
+
+        Task<IKoiVetenaryResult> UpdateDetailAppointmentServiceID(int appointmentId, int serviceId);
+        Task<IKoiVetenaryResult> UpdateDetailAppointmentVeteID(int appointmentId, int veteId);
         Task<IKoiVetenaryResult> CreateAppointmentDetailAsync(AppointmentDetail appointment);
     }
     public class AppointmentDetailService : IAppointmentDetailService
@@ -45,19 +48,33 @@ namespace KoiVetenary.Service
                 return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        public async Task<IKoiVetenaryResult> CreateAppointmentDetailAsync(AppointmentDetail appointment)
+
+        public async Task<IKoiVetenaryResult> UpdateDetailAppointmentServiceID(int appointmentId, int serviceId)
         {
             try
             {
-
-                int result = await _unitOfWork.AppointmentDetailRepository.CreateAsync(appointment);
-                if (result > 0)
+                var detail = await _unitOfWork.AppointmentDetailRepository.GetByIdAsync(appointmentId);
+                if (detail != null)
                 {
-                    return new KoiVetenaryResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                    var service = await _unitOfWork.ServiceRepository.GetByIdAsync(serviceId);
+                    var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync((int)detail.AppointmentId);
+                    appointment.TotalCost += service.BasePrice;
+                    appointment.TotalEstimatedDuration += service.Duration;
+                    detail.Service = service;
+                    await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
+                    int result = await _unitOfWork.AppointmentDetailRepository.UpdateAsync(detail);
+                    if (result > 0)
+                    {
+                        return new KoiVetenaryResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+                    }
+                    else
+                    {
+                        return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                    }
                 }
                 else
                 {
-                    return new KoiVetenaryResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                    return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
             }
             catch (Exception ex)
@@ -66,5 +83,73 @@ namespace KoiVetenary.Service
             }
         }
 
+        public async Task<IKoiVetenaryResult> CreateAppointmentDetailAsync(AppointmentDetail appointment)
+        {
+            try
+            {
+                var pendingApp = await _unitOfWork.AppointmentRepository.GetByIdAsync((int)appointment.AppointmentId);
+                if (pendingApp == null)
+                {
+                    return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Appointment not found");
+                }
+                else
+                {
+                    if (!pendingApp.Status.Equals(AppointmentStatus.Pending))
+                    {
+                        return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Appointment must be PENDING to add appointment detail");
+                    }
+                    else
+                    {
+                        appointment.CreatedDate = DateTime.Now;
+                        appointment.UpdatedDate = DateTime.Now;
+                        appointment.CreatedBy = pendingApp.Owner.FirstName + pendingApp.Owner.LastName;
+                        appointment.ModifiedBy = pendingApp.Owner.FirstName + pendingApp.Owner.LastName;
+                        int result = await _unitOfWork.AppointmentDetailRepository.CreateAsync(appointment);
+                        if (result > 0)
+                        {
+                            return new KoiVetenaryResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result);
+                        }
+                        else
+                        {
+                            return new KoiVetenaryResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IKoiVetenaryResult> UpdateDetailAppointmentVeteID(int appointmentId, int veteId)
+        {
+
+           try
+            {
+                var appointment = await _unitOfWork.AppointmentDetailRepository.GetByIdAsync(appointmentId);
+                if (appointment != null)
+                {
+                    appointment.VeterinarianId = veteId;
+                    int result = await _unitOfWork.AppointmentDetailRepository.UpdateAsync(appointment);
+                    if (result > 0)
+                    {
+                        return new KoiVetenaryResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+                    }
+                    else
+                    {
+                        return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                    }
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
     }
 }
