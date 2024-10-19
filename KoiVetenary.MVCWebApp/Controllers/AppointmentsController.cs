@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,7 +100,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,Status,Notes,TotalEstimatedDuration,TotalCost,CreatedBy,ModifiedBy,CreatedDate,UpdatedDate")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes,TotalEstimatedDuration,TotalCost")] Appointment appointment)
+
         {
             bool saveStatus = false;
 
@@ -131,6 +133,14 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
             else
             {
+                ViewData["AppointmentStatus"] = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
+                    new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
+                    new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
+                    new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
+                    new SelectListItem { Value = AppointmentStatus.Canceled, Text = "Canceled" }
+                };
                 ViewData["OwnerId"] = new SelectList(await GetOwners(), "OwnerId", "OwnerId");
                 return View(appointment);
             }
@@ -170,7 +180,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,Status,Notes,TotalEstimatedDuration,TotalCost,CreatedBy,ModifiedBy,CreatedDate,UpdatedDate")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes,TotalEstimatedDuration,TotalCost")] Appointment appointment)
+
         {
             bool saveStatus = false;
 
@@ -202,6 +213,14 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
             else
             {
+                ViewData["AppointmentStatus"] = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
+                    new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
+                    new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
+                    new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
+                    new SelectListItem { Value = AppointmentStatus.Canceled, Text = "Canceled" }
+                };
                 ViewData["OwnerId"] = new SelectList(await GetOwners(), "OwnerId", "OwnerId");
                 return View(appointment);
             }

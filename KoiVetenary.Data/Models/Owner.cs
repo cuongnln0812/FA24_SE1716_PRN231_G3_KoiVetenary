@@ -2,7 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace KoiVetenary.Data.Models
 {
@@ -27,7 +26,6 @@ namespace KoiVetenary.Data.Models
         public string PreferredContactMethod { get; set; }
 
         public virtual ICollection<Animal> Animals { get; set; }
-             
         public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }

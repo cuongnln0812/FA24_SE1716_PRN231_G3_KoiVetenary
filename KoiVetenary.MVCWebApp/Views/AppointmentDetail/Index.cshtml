@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-md-10">
-        <h3 class="display-8">Bank List</h3>
+        <h3 class="display-8">AppointmentDetail List</h3>
     </div>
     <div class="col-md-2 text-end">
         <button type="button" class="btn btn-primary" onclick="add();">
@@ -26,12 +26,12 @@
                     <th class="card-title text-center">Animal Id</th>
                     <th class="card-title text-center">Veterinarian Id</th>
                     <th class="card-title text-center">Service Id</th>
-                    <th class="card-title text-center">Service Date</th>
-                    <th class="card-title text-center">Service Time</th>
-                    <th class="card-title text-center">Status</th>
+                    <th class="card-title text-center">Animal Status</th>
+                    <th class="card-title text-center">Emergency Instructions</th>
+                    <th class="card-title text-center">Allergies</th>
+                    <th class="card-title text-center">GroomingNeeds</th>
+                    <th class="card-title text-center">SpecialNeeds</th>
                     <th class="card-title text-center">Notes</th>
-                    <th class="card-title text-center">Service Duration</th>
-                    <th class="card-title text-center">Service Cost</th>
                 </tr>
             </thead>
             <tbody class="tblAppointmentDetails">
@@ -81,22 +81,22 @@
 
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="serviceDate" class="form-label">Service Date</label>
-                            <input type="date" class="form-control" id="serviceDate" name="serviceDate" />
+                            <label for="animalStatus" class="form-label">Animal Status</label>
+                            <input type="text" class="form-control" id="animalStatus" name="animalStatus" />
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="serviceTime" class="form-label">Service Time</label>
-                            <input type="text" class="form-control" id="serviceTime" name="serviceTime" />
+                            <label for="emergencyInstructions" class="form-label">Emergency Instructions</label>
+                            <input type="text" class="form-control" id="emergencyInstructions" name="emergencyInstructions" />
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control" id="status" name="status" />
+                            <label for="allergies" class="form-label">Allergies</label>
+                            <input type="text" class="form-control" id="allergies" name="allergies" />
                         </div>
                     </div>
 
@@ -109,15 +109,15 @@
 
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="serviceDuration" class="form-label">Service Duration (minutes)</label>
-                            <input type="number" class="form-control" id="serviceDuration" name="serviceDuration" />
+                            <label for="groomingNeeds" class="form-label">Grooming Needs</label>
+                            <input type="text" class="form-control" id="groomingNeeds" name="groomingNeeds" />
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="serviceCost" class="form-label">Service Cost</label>
-                            <input type="number" class="form-control" id="serviceCost" name="serviceCost" />
+                            <label for="specialNeeds" class="form-label">Special Needs</label>
+                            <input type="text" class="form-control" id="specialNeeds" name="specialNeeds" />
                         </div>
                     </div>
                 </div>
@@ -166,12 +166,12 @@
                         html += '<td>' + item.animalId + '</td>';
                         html += '<td>' + item.veterinarianId + '</td>';
                         html += '<td>' + item.serviceId + '</td>';
-                        html += '<td>' + item.serviceDate + '</td>';
-                        html += '<td>' + item.serviceTime + '</td>';
-                        html += '<td>' + item.status + '</td>';
+                        html += '<td>' + item.animalStatus + '</td>';
+                        html += '<td>' + item.emergencyInstructions + '</td>';
+                        html += '<td>' + item.allergies + '</td>';
                         html += '<td>' + item.notes + '</td>';
-                        html += '<td>' + item.serviceDuration + '</td>';
-                        html += '<td>' + item.serviceCost + '</td>';
+                        html += '<td>' + item.groomingNeeds + '</td>';
+                        html += '<td>' + item.specialNeeds + '</td>';
                         html += '<td></td>';
                         html += '</tr>';
                     });
@@ -197,17 +197,18 @@
                     animalId: $("#animalId").val(),
                     // veterinarianId: $("#veterinarianId").val(),
                     // serviceId: $("#serviceId").val(),
-                    serviceTime: $("#serviceTime").val(),
-                    status: $("#status").val(),
+                    animalStatus: $("#animalStatus").val(),
+                    emergencyInstructions: $("#emergencyInstructions").val(),
                     notes: $("#notes").val(),
-                    serviceDuration: $("#serviceDuration").val(),
-                    serviceCost: $("#serviceCost").val
+                    allergies: $("#allergies").val(),
+                    groomingNeeds: $("#groomingNeeds").val(),
+                    specialNeeds: $("#specialNeeds").val
                 }),
                 success: function (result) {
                     if (result.status >= 1) {
                         $('#appointmentDetailModal').modal('hide');
-                        localStorage.setItem('savedAppointmentDetailId', result.data);
-                        console.log(localStorage.getItem('savedAppointmentDetailId'));
+                        localStorage.setItem('appointmentDetailId', result.data);
+                        console.log(localStorage.getItem('appointmentDetailId'));
                         window.location.href = '/ChoosePlan/Index';
                     }
                 },
