@@ -2,6 +2,9 @@
 using KoiVetenary.Common;
 using KoiVetenary.Data;
 using KoiVetenary.Data.Models;
+using KoiVetenary.Service.DTO.Appointment;
+using LinqKit;
+using System.Linq;
 
 
 namespace KoiVetenary.Service
@@ -145,9 +148,9 @@ namespace KoiVetenary.Service
             }
         }
 
-        public Task<IKoiVetenaryResult> SearchByKeyword(string? searchTerm)
+        public Task<IKoiVetenaryResult> SearchByKeyword(string? searchCriteria)
         {
-            throw new NotImplementedException();
+            
         }
 
         public async Task<IKoiVetenaryResult> UpdateAppointment(Appointment appointment)
