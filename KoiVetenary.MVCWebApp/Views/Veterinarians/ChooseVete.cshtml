@@ -49,7 +49,7 @@
 
     <script>
         let selectedVeterinarianId = null;
-
+        var appointmentDetailId = localStorage.getItem('appointmentDetailId');
         function selectTime(button, veterinarianId) {
             // Reset all buttons to unselected state
             document.querySelectorAll('.time-btn').forEach(btn => {
@@ -79,7 +79,7 @@
                     type: 'PUT',
                     success: function () {
                         alert('Service added successfully!');
-                        window.location.href = '/Veterinarians/ChooseVete';
+                        window.location.href = '/AppointmentDetail/Index';
                     },
                     error: function () {
                         alert('Error updating appointment');

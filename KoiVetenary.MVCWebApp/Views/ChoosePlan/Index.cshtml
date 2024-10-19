@@ -58,7 +58,9 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
+
         var appointmentDetailId = localStorage.getItem('appointmentDetailId');
+
         $(document).ready(function () {
             $('#searchQuery').on('input', function () {
                 var query = $(this).val();
@@ -86,7 +88,7 @@
                 var serviceId = $(this).data('id');
                 // update appointment với serviceId
                 $.ajax({
-                    url: 'https://localhost:7238/api/AppointmentDetail/update-service/' + appointmentDetailId +'/' + serviceId,
+                    url: 'https://localhost:7238/api/AppointmentDetail/update-service/' + appointmentDetailId + '/' + serviceId,
                     type: 'PUT',
                     
                     success: function () {
