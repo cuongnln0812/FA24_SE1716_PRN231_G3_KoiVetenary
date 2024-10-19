@@ -53,12 +53,16 @@ namespace KoiVetenary.Service
         {
             try
             {
-                var appointment = await _unitOfWork.AppointmentDetailRepository.GetByIdAsync(appointmentId);
-                if (appointment != null)
+                var detail = await _unitOfWork.AppointmentDetailRepository.GetByIdAsync(appointmentId);
+                if (detail != null)
                 {
                     var service = await _unitOfWork.ServiceRepository.GetByIdAsync(serviceId);
-                    appointment.Service = service;
-                    int result = await _unitOfWork.AppointmentDetailRepository.UpdateAsync(appointment);
+                    var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync((int)detail.AppointmentId);
+                    appointment.TotalCost += service.BasePrice;
+                    appointment.TotalEstimatedDuration += service.Duration;
+                    detail.Service = service;
+                    await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
+                    int result = await _unitOfWork.AppointmentDetailRepository.UpdateAsync(detail);
                     if (result > 0)
                     {
                         return new KoiVetenaryResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);

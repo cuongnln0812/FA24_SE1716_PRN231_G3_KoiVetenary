@@ -57,6 +57,16 @@ namespace KoiVetenary.Data.Repositories
                 throw ex;
             }
         }
+        public async Task<AppointmentDetail> GetByIdAsync(int id)
+        {
+            var entity = await _context.AppointmentDetails.Include(a => a.Appointment).FirstOrDefaultAsync(a => a.AppointmentDetailId == id);
+            if (entity != null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+            return entity;
+        }
+
     }
 
 
