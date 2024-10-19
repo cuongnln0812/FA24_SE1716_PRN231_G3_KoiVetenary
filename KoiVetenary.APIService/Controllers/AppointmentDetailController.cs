@@ -26,6 +26,12 @@ namespace KoiVetenary.APIService.Controllers
             //return View(await fA24_SE1716_PRN231_G3_KoiVetenaryContext.ToListAsync());
         }
 
+        [HttpPut]
+        public async Task<IKoiVetenaryResult> UpdateDetailAppServiceId(int appointmentId, int serviceId)
+        {
+            return await _appointmentDetailService.UpdateDetailAppointmentServiceID(appointmentId, serviceId);
+        }
+        
         [HttpPost]
         public async Task<IKoiVetenaryResult> Create([FromBody] AppointmentDetail appointment)
         {
