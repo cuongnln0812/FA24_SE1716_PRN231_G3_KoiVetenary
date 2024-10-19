@@ -9,6 +9,7 @@ namespace KoiVetenary.Service
     public interface IAppointmentService
     {
         Task<IKoiVetenaryResult> GetAppointmentsAsync();
+        Task<IKoiVetenaryResult> GetPendingAppointmentsAsync();
         Task<IKoiVetenaryResult> GetAppointmentByIdAsync(int? id);
         Task<IKoiVetenaryResult> CreateAppointment(Appointment appointment);
         Task<IKoiVetenaryResult> UpdateAppointment(Appointment appointment);
@@ -122,6 +123,28 @@ namespace KoiVetenary.Service
             }
         }
 
+        public async Task<IKoiVetenaryResult> GetPendingAppointmentsAsync()
+        {
+            try
+            {
+
+                var result = await _unitOfWork.AppointmentRepository.GetAllPendingAsync();
+
+                if (result != null)
+                {
+                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
         public Task<IKoiVetenaryResult> SearchByKeyword(string? searchTerm)
         {
             throw new NotImplementedException();
@@ -189,6 +212,5 @@ namespace KoiVetenary.Service
             // Check if the combined date and time is in the past
             return appointmentDateTime < DateTime.Now;
         }
-
     }
 }

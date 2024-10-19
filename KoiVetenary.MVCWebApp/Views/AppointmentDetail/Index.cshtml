@@ -54,14 +54,18 @@
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <label for="appointmentId" class="form-label">Appointment ID</label>
-                            <input type="number" class="form-control" id="appointmentId" name="appointmentId" />
+                            <select class="form-control" id="appointmentList" name="appointmentId">
+                                <option value="" disabled selected>Select an Appointment</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <label for="animalId" class="form-label">Animal ID</label>
-                            <input type="number" class="form-control" id="animalId" name="animalId" />
+                            <select class="form-control" id="animalList" name="animalId">
+                                <option value="" disabled selected>Select an Animal</option>
+                            </select>
                         </div>
                     </div>
 
@@ -141,6 +145,8 @@
             $("#appointmentDetailModalContent").html("");
             $("#appointmentDetailModalLabel").html("Add New");
             $('#appointmentDetailModal').modal('show');
+            getAppointments();
+            getAnimals();
         }
 
         $(document).ready(function () {
@@ -193,8 +199,8 @@
                 },
                 data: JSON.stringify({
                     appointmentDetailId: 0,
-                    appointmentId: $("#appointmentId").val(),
-                    animalId: $("#animalId").val(),
+                    appointmentId: $("#appointmentList").val(),
+                    animalId: $("#animalList").val(),
                     // veterinarianId: $("#veterinarianId").val(),
                     // serviceId: $("#serviceId").val(),
                     animalStatus: $("#animalStatus").val(),
@@ -219,5 +225,46 @@
             });
         });
 
+        function getAppointments() {
+            $.ajax({
+                url: 'https://localhost:7238/api/Appointments/Pending',
+                type: 'GET',
+                contentType: "application/json;charset=utf-8",
+                dataType: 'json',
+                success: function (result) {
+                    var appointmentSelect = $('#appointmentList');
+                    appointmentSelect.empty();
+                    console.log('Appointments:', result);
+                    appointmentSelect.append('<option value="" disabled selected> Select an Appointment </option>');
+                    $.each(result.data, function (index, appointment) {
+                        appointmentSelect.append('<option value="' + appointment.appointmentId + '">' + appointment.appointmentId + '</option>');
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching appointments:', error);
+                }
+            });
+        }
+
+        function getAnimals() {
+            $.ajax({
+                url: 'https://localhost:7238/api/Animals',
+                type: 'GET',
+                contentType: "application/json;charset=utf-8",
+                dataType: 'json',
+                success: function (result) {
+                    var animalSelect = $('#animalList');
+                    console.log('Animals:', result);
+                    animalSelect.empty();
+                    animalSelect.append('<option value="" disabled selected> Select an Animal </option>');
+                    $.each(result.data, function (index, animal) {
+                        animalSelect.append('<option value="' + animal.animalId + '">' + animal.name + '</option>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert('Error loading animals: ' + xhr.statusText);
+                }
+            });
+        }
     </script>
 }

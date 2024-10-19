@@ -34,6 +34,12 @@ namespace KoiVetenary.APIService.Controllers
             //return View(await fA24_SE1716_PRN231_G3_KoiVetenaryContext.ToListAsync());
         }
 
+        [HttpGet("Pending")]
+        public async Task<IKoiVetenaryResult> GetPendingAppoinentAsync()
+        {
+            return await _appointmentService.GetPendingAppointmentsAsync();
+        }
+
         //GET: Appointments/Details/5
         [HttpGet("{id}")]
         public async Task<IKoiVetenaryResult> GetAppointmentDetail( int? id)

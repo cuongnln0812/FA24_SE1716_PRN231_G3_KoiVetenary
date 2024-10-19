@@ -81,15 +81,29 @@ namespace KoiVetenary.Service
         {
             try
             {
-
-                int result = await _unitOfWork.AppointmentDetailRepository.CreateAsync(appointment);
-                if (result > 0)
+                var pendingApp = _unitOfWork.AppointmentRepository.GetById((int)appointment.AppointmentId);
+                if (pendingApp == null)
                 {
-                    return new KoiVetenaryResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result);
+                    return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Appointment not found");
                 }
                 else
                 {
-                    return new KoiVetenaryResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                    if (!pendingApp.Status.Equals(AppointmentStatus.Pending))
+                    {
+                        return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Appointment must be PENDING to add appointment detail");
+                    }
+                    else
+                    {
+                        int result = await _unitOfWork.AppointmentDetailRepository.CreateAsync(appointment);
+                        if (result > 0)
+                        {
+                            return new KoiVetenaryResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result);
+                        }
+                        else
+                        {
+                            return new KoiVetenaryResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
