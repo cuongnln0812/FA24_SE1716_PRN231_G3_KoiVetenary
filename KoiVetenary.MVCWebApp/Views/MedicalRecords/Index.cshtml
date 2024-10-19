@@ -115,6 +115,14 @@
 <div class="row">
     <div class="col-md-12">
         <button onclick="window.location.href='/MedicalRecords/Create'" class="btn btn-success mb-3">Create New</button>
+
+         <!-- Search Bar -->
+        <div class="mb-3">
+            <input type="text" id="searchTerm" class="form-control" placeholder="Search Medical Records...">
+            <button onclick="searchData()" class="btn btn-primary mt-2">Search</button>
+        </div>
+
+
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr class="card-header">
@@ -141,7 +149,7 @@
     </div>
 </div>
 
-@section scripts {
+@* @section scripts {
     <script type="text/javascript">
         $(document).ready(function () {
             loadData();
@@ -187,6 +195,94 @@
             });
         }
 
+        function formatDate(dateString) {
+            if (dateString) {
+                var date = new Date(dateString);
+                return date.toLocaleDateString();
+            } else {
+                return '';
+            }
+        }
+    </script>
+} *@
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadData(); // Load all records when the page is first loaded
+        });
+
+        // Function to load all data
+        function loadData() {
+            $.ajax({
+                url: 'https://localhost:7238/api/MedicalRecord',
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    renderTable(result.data);
+                },
+                error: function (xhr, error) {
+                    alert('Error: ' + xhr.statusText);
+                }
+            });
+        }
+
+        // Function to handle the search
+        function searchData() {
+            var searchTerm = $('#searchTerm').val().trim(); // Get the value of the search term and trim any spaces
+            var url = 'https://localhost:7238/api/MedicalRecord';
+
+            // If search term is not empty, append it to the search API call
+            if (searchTerm !== '') {
+                url = url + '/search?searchTerm=' + encodeURIComponent(searchTerm);
+            }
+
+            // Make AJAX call to fetch records based on search term or all records if searchTerm is empty
+            $.ajax({
+                url: url,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    renderTable(result.data); // Render the search results or all records
+                },
+                error: function (xhr, error) {
+                    alert('Error: ' + xhr.statusText);
+                }
+            });
+        }
+
+        // Function to render the table rows with results
+        function renderTable(data) {
+            var html = '';
+            $.each(data, function (key, item) {
+                html += '<tr>';
+                html += '<td>' + formatDate(item.recordDate) + '</td>';
+                html += '<td>' + item.symptoms + '</td>';
+                html += '<td>' + item.diagnosis + '</td>';
+                html += '<td>' + item.treatment + '</td>';
+                html += '<td>' + item.medications + '</td>';
+                html += '<td>' + item.labResults + '</td>';
+                html += '<td>' + item.vetNotes + '</td>';
+                html += '<td>' + item.followUpRequired + '</td>';
+                html += '<td>' + formatDate(item.followUpDate) + '</td>';
+                html += '<td>' + item.createdBy + '</td>';
+                html += '<td>' + item.modifiedBy + '</td>';
+                html += '<td>' + formatDate(item.createdDate) + '</td>';
+                html += '<td>' + formatDate(item.updatedDate) + '</td>';
+                html += '<td>' + (item.animal ? item.animal.name : '') + '</td>';
+                html += '<td>';
+                html += '<a href="/MedicalRecords/Edit/' + item.recordId + '">Edit</a> | ';
+                html += '<a href="/MedicalRecords/Details/' + item.recordId + '">Details</a> | ';
+                html += '<a href="/MedicalRecords/Delete/' + item.recordId + '">Delete</a>';
+                html += '</td>';
+                html += '</tr>';
+            });
+            $('.tblMedicalRecords').html(html);
+        }
+
+        // Helper function to format dates
         function formatDate(dateString) {
             if (dateString) {
                 var date = new Date(dateString);
