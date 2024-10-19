@@ -23,9 +23,12 @@ namespace KoiVetenary.APIService.Controllers
         public async Task<IKoiVetenaryResult> GetAnimalsAsync()
         {
             return await _animalService.GetAnimalsAsync();
+        }
 
-            //var fA24_SE1716_PRN231_G3_KoiVetenaryContext = _service.Animals.Include(a => a.Owner).Include(a => a.Type);
-            //return View(await fA24_SE1716_PRN231_G3_KoiVetenaryContext.ToListAsync());
+        [HttpGet("search")]
+        public async Task<IKoiVetenaryResult> SearchAnimalsAsync([FromQuery]AnimalSearchCriteria animalSearchCriteria)
+        {
+            return await _animalService.SearchByKeyword(animalSearchCriteria);
         }
 
         // GET: Animals/Details/5

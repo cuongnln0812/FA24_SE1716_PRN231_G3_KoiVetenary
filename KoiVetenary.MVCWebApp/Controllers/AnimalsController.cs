@@ -11,6 +11,7 @@ using KoiVetenary.Business;
 using KoiVetenary.Common;
 using Newtonsoft.Json;
 using KoiVetenary.Service.DTO.Animal;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KoiVetenary.MVCWebApp.Controllers
 {
@@ -25,27 +26,64 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
 
         // GET: Animals
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm = "")
         {
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Animals"))
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string apiResponse = await response.Content.ReadAsStringAsync();
-                        var animals = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
+                KoiVetenaryResult animals = null;
 
-                        if (animals != null && animals.Data != null)
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    var animalSearchCriteria = new AnimalSearchCriteria
+                    {
+                        Name = searchTerm,
+                        TypeName = searchTerm,
+                        Species = searchTerm,
+                        Color = searchTerm,
+                        OwnerFirstName = searchTerm,
+                        OwnerLastName = searchTerm
+                    };
+
+                    // Construct the query with search term
+                    var query = $"Animals/search?Name={Uri.EscapeDataString(animalSearchCriteria.Name)}" +
+                                $"&TypeName={Uri.EscapeDataString(animalSearchCriteria.TypeName)}" +
+                                $"&Species={Uri.EscapeDataString(animalSearchCriteria.Species)}" +
+                                $"&Color={Uri.EscapeDataString(animalSearchCriteria.Color)}" +
+                                $"&OwnerFirstName={Uri.EscapeDataString(animalSearchCriteria.OwnerFirstName)}" +
+                                $"&OwnerLastName={Uri.EscapeDataString(animalSearchCriteria.OwnerLastName)}";
+
+                    using (var response = await httpClient.GetAsync(Const.API_Endpoint + query))
+                    {
+                        if (response.IsSuccessStatusCode)
                         {
-                            var data = JsonConvert.DeserializeObject<List<Animal>>(animals.Data.ToString());
-                            return View(data);
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            animals = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
                         }
                     }
                 }
+                else
+                {
+                    // If no search term, get all animals
+                    using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Animals"))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            animals = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
+                        }
+                    }
+                }
+
+                if (animals != null && animals.Data != null)
+                {
+                    var data = JsonConvert.DeserializeObject<List<Animal>>(animals.Data.ToString());
+                    return View(data);
+                }
             }
-            return View(new List<Data.Models.Service>());
+
+            return View(new List<Animal>()); 
         }
+
 
         // GET: Animals/Details/5
         public async Task<IActionResult> Details(int? id)

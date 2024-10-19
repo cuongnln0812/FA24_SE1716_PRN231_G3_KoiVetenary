@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using LinqKit;
 
 namespace KoiVetenary.Service
 {
@@ -18,7 +20,7 @@ namespace KoiVetenary.Service
         Task<IKoiVetenaryResult> CreateAnimal(AnimalRequest animalRequest);
         Task<IKoiVetenaryResult> UpdateAnimal(AnimalRequest animalRequest);
         Task<IKoiVetenaryResult> DeleteAnimal(int? animalId);
-        Task<IKoiVetenaryResult> SearchByKeyword(string? searchTerm);
+        Task<IKoiVetenaryResult> SearchByKeyword(AnimalSearchCriteria searchCriteria);
     }
     public class AnimalService : IAnimalService
     {
@@ -154,10 +156,67 @@ namespace KoiVetenary.Service
             }
         }
 
-        public Task<IKoiVetenaryResult> SearchByKeyword(string? searchTerm)
+        public async Task<IKoiVetenaryResult> SearchByKeyword(AnimalSearchCriteria searchCriteria)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = _unitOfWork.AnimalRepository.GetQueryable();
+
+                // Initialize a predicate for OR conditions
+                var predicate = PredicateBuilder.New<Animal>(false); // Start with false for OR conditions
+
+                if (!string.IsNullOrWhiteSpace(searchCriteria.Name))
+                {
+                    predicate = predicate.Or(a => a.Name.Contains(searchCriteria.Name));
+                }
+
+                if (!string.IsNullOrWhiteSpace(searchCriteria.TypeName))
+                {
+                    predicate = predicate.Or(a => a.Type.TypeName.Contains(searchCriteria.TypeName));
+                }
+
+                if (!string.IsNullOrWhiteSpace(searchCriteria.Species))
+                {
+                    predicate = predicate.Or(a => a.Species.Contains(searchCriteria.Species));
+                }
+
+                if (!string.IsNullOrWhiteSpace(searchCriteria.Color))
+                {
+                    predicate = predicate.Or(a => a.Color.Contains(searchCriteria.Color));
+                }
+
+                if (!string.IsNullOrWhiteSpace(searchCriteria.OwnerFirstName))
+                {
+                    predicate = predicate.Or(a => a.Owner.FirstName.Contains(searchCriteria.OwnerFirstName));
+                }
+
+                if (!string.IsNullOrWhiteSpace(searchCriteria.OwnerLastName))
+                {
+                    predicate = predicate.Or(a => a.Owner.LastName.Contains(searchCriteria.OwnerLastName));
+                }
+
+                query = query.Where(predicate);
+
+                var animals = await query.Include(a => a.Owner)
+                                         .Include(a => a.Type)
+                                         .ToListAsync();
+
+                if (animals.Any())
+                {
+                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, animals);
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_READ_CODE, "No animals found matching the criteria.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
         }
+
+
 
         public async Task<IKoiVetenaryResult> UpdateAnimal(AnimalRequest animalRequest)
         {
