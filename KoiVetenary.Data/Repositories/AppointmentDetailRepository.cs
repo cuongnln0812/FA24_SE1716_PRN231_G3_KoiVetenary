@@ -13,6 +13,13 @@ namespace KoiVetenary.Data.Repositories
     {
         public AppointmentDetailRepository() { }
 
+        public async Task<int> CreateAsync(AppointmentDetail detail)
+        {
+            _context.Add(detail);
+            await _context.SaveChangesAsync();
+            return detail.AppointmentDetailId;
+        }
+
         //update serviceId in AppointmentDetail
         public async Task<bool> UpdateServiceId(int appointmentId, int serviceId)
         {

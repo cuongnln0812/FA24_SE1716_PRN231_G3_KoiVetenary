@@ -56,7 +56,8 @@ namespace KoiVetenary.Service
                 var appointment = await _unitOfWork.AppointmentDetailRepository.GetByIdAsync(appointmentId);
                 if (appointment != null)
                 {
-                    appointment.ServiceId = serviceId;
+                    var service = await _unitOfWork.ServiceRepository.GetByIdAsync(serviceId);
+                    appointment.Service = service;
                     int result = await _unitOfWork.AppointmentDetailRepository.UpdateAsync(appointment);
                     if (result > 0)
                     {
@@ -82,7 +83,7 @@ namespace KoiVetenary.Service
         {
             try
             {
-                var pendingApp = _unitOfWork.AppointmentRepository.GetById((int)appointment.AppointmentId);
+                var pendingApp = await _unitOfWork.AppointmentRepository.GetByIdAsync((int)appointment.AppointmentId);
                 if (pendingApp == null)
                 {
                     return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Appointment not found");
@@ -95,6 +96,10 @@ namespace KoiVetenary.Service
                     }
                     else
                     {
+                        appointment.CreatedDate = DateTime.Now;
+                        appointment.UpdatedDate = DateTime.Now;
+                        appointment.CreatedBy = pendingApp.Owner.FirstName + pendingApp.Owner.LastName;
+                        appointment.ModifiedBy = pendingApp.Owner.FirstName + pendingApp.Owner.LastName;
                         int result = await _unitOfWork.AppointmentDetailRepository.CreateAsync(appointment);
                         if (result > 0)
                         {
