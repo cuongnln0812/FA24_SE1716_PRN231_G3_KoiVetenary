@@ -16,10 +16,10 @@ namespace KoiVetenary.Service
     public class CheckoutService : ICheckoutService
     {
         private readonly UnitOfWork _unitOfWork;
-        public CheckoutService(UnitOfWork unitOfWork)
+        public CheckoutService()
         {
-            _unitOfWork = unitOfWork;
-            
+            _unitOfWork ??= new UnitOfWork();
+
         }
         public async Task<Appointment> Checkout(int appointmentId)
         {
@@ -32,10 +32,24 @@ namespace KoiVetenary.Service
         public async Task<Appointment> CreatePayment(int appointmentId, Payment transaction)
         {
             var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId);
-            appointment.Payments = (ICollection<Payment>)transaction;
+
+            // Check if Payments collection is null, and initialize if necessary
+            if (appointment.Payments == null)
+            {
+                appointment.Payments = new List<Payment>();
+            }
+
+            // Add the transaction (Payment object) to the Payments collection
+            appointment.Payments.Add(transaction);
+
+            // Update the appointment status
             appointment.Status = "Paid";
+
+            // Update the appointment in the repository
             await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
-            return appointment;
+
+            // Return the updated appointment
+            return appointment; ;
         }
     }
 }

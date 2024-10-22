@@ -48,7 +48,7 @@ namespace KoiVetenary.APIService.Controllers
             if (model.Vnp_TransactionStatus != "00") return BadRequest();
             var transaction = new Payment
             {
-                AppointmentId = (int)model.Vnp_OrderInfo,
+                AppointmentId = Convert.ToInt32(model.Vnp_OrderInfo),
                 PaymentDate = DateTime.ParseExact((string)model.Vnp_PayDate, "yyyyMMddHHmmss", CultureInfo.InvariantCulture),
                 TotalAmount = model.Vnp_Amount,
                 TransactionNo = model.Vnp_TransactionNo,
@@ -68,6 +68,7 @@ namespace KoiVetenary.APIService.Controllers
 
             };
             var orderId = Convert.ToInt32(model.Vnp_OrderInfo);
+            await _checkoutService.CreatePayment(orderId, transaction);
             //await _checkoutService.CreateHistory(orderId, transaction);
             //await _checkoutService.CreateSubscription(orderId);
             return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{orderId}");
