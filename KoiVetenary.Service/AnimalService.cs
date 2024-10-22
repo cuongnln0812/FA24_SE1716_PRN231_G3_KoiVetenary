@@ -195,6 +195,40 @@ namespace KoiVetenary.Service
                     predicate = predicate.Or(a => a.Owner.LastName.Contains(searchCriteria.OwnerLastName));
                 }
 
+                // Add date of birth filtering
+                if (searchCriteria.DateOfBirthFrom.HasValue)
+                {
+                    predicate = predicate.And(a => a.DateOfBirth >= searchCriteria.DateOfBirthFrom.Value);
+                }
+
+                if (searchCriteria.DateOfBirthTo.HasValue)
+                {
+                    predicate = predicate.And(a => a.DateOfBirth <= searchCriteria.DateOfBirthTo.Value);
+                }
+
+                // Add age filtering
+                if (searchCriteria.AgeFrom.HasValue)
+                {
+                    predicate = predicate.And(a => a.Age >= searchCriteria.AgeFrom.Value);
+                }
+
+                if (searchCriteria.AgeTo.HasValue)
+                {
+                    predicate = predicate.And(a => a.Age <= searchCriteria.AgeTo.Value);
+                }
+
+                // Add weight filtering
+                if (searchCriteria.WeightFrom.HasValue)
+                {
+                    predicate = predicate.And(a => a.Weight >= searchCriteria.WeightFrom.Value);
+                }
+
+                if (searchCriteria.WeightTo.HasValue)
+                {
+                    predicate = predicate.And(a => a.Weight <= searchCriteria.WeightTo.Value);
+                }
+
+                // Apply the predicate to the query
                 query = query.Where(predicate);
 
                 var animals = await query.Include(a => a.Owner)
@@ -215,6 +249,7 @@ namespace KoiVetenary.Service
                 return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
 
 
 

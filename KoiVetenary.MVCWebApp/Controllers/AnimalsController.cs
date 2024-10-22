@@ -26,13 +26,13 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
 
         // GET: Animals
-        public async Task<IActionResult> Index(string searchTerm = "")
+        public async Task<IActionResult> Index(string searchTerm = "", DateTime? DateOfBirthFrom = null, DateTime? DateOfBirthTo = null, int? AgeFrom = null, int? AgeTo = null, decimal? WeightFrom = null, decimal? WeightTo = null)
         {
             using (var httpClient = new HttpClient())
             {
                 KoiVetenaryResult animals = null;
 
-                if (!string.IsNullOrWhiteSpace(searchTerm))
+                if (!string.IsNullOrWhiteSpace(searchTerm) || DateOfBirthFrom.HasValue || DateOfBirthTo.HasValue || AgeFrom.HasValue || AgeTo.HasValue || WeightFrom.HasValue || WeightTo.HasValue)
                 {
                     var animalSearchCriteria = new AnimalSearchCriteria
                     {
@@ -41,7 +41,14 @@ namespace KoiVetenary.MVCWebApp.Controllers
                         Species = searchTerm,
                         Color = searchTerm,
                         OwnerFirstName = searchTerm,
-                        OwnerLastName = searchTerm
+                        OwnerLastName = searchTerm,
+                        DateOfBirthFrom = DateOfBirthFrom,
+                        DateOfBirthTo = DateOfBirthTo,
+                        AgeFrom = AgeFrom,
+                        AgeTo = AgeTo,
+                        WeightFrom = WeightFrom,
+                        WeightTo = WeightTo
+
                     };
 
                     // Construct the query with search term
@@ -51,6 +58,39 @@ namespace KoiVetenary.MVCWebApp.Controllers
                                 $"&Color={Uri.EscapeDataString(animalSearchCriteria.Color)}" +
                                 $"&OwnerFirstName={Uri.EscapeDataString(animalSearchCriteria.OwnerFirstName)}" +
                                 $"&OwnerLastName={Uri.EscapeDataString(animalSearchCriteria.OwnerLastName)}";
+
+                    // Add date of birth filtering
+                    if (DateOfBirthFrom.HasValue)
+                    {
+                        query += $"&DateOfBirthFrom={DateOfBirthFrom.Value:yyyy-MM-dd}";
+                    }
+
+                    if (DateOfBirthTo.HasValue)
+                    {
+                        query += $"&DateOfBirthTo={DateOfBirthTo.Value:yyyy-MM-dd}";
+                    }
+
+                    // Add age filtering
+                    if (AgeFrom.HasValue)
+                    {
+                        query += $"&AgeFrom={AgeFrom.Value}";
+                    }
+
+                    if (AgeTo.HasValue)
+                    {
+                        query += $"&AgeTo={AgeTo.Value}";
+                    }
+
+                    // Add weight filtering
+                    if (WeightFrom.HasValue)
+                    {
+                        query += $"&WeightFrom={WeightFrom.Value}";
+                    }
+
+                    if (WeightTo.HasValue)
+                    {
+                        query += $"&WeightTo={WeightTo.Value}";
+                    }
 
                     using (var response = await httpClient.GetAsync(Const.API_Endpoint + query))
                     {
