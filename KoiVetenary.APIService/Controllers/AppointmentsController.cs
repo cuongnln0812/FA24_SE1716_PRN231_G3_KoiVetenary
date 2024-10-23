@@ -10,6 +10,7 @@ using KoiVetenary.Service;
 using KoiVetenary.Common;
 using Newtonsoft.Json;
 using KoiVetenary.Business;
+using KoiVetenary.Service.DTO.Appointment;
 
 namespace KoiVetenary.APIService.Controllers
 {
@@ -38,6 +39,12 @@ namespace KoiVetenary.APIService.Controllers
         public async Task<IKoiVetenaryResult> GetPendingAppoinentAsync()
         {
             return await _appointmentService.GetPendingAppointmentsAsync();
+        }
+
+        [HttpGet("search")]
+        public async Task<IKoiVetenaryResult> SearchAppointmentsAsync([FromQuery] String searchTerm)
+        {
+            return await _appointmentService.SearchByKeyword(searchTerm);
         }
 
         //GET: Appointments/Details/5
