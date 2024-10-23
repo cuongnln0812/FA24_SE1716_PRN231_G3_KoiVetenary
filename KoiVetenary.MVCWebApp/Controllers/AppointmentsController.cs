@@ -84,14 +84,13 @@ namespace KoiVetenary.MVCWebApp.Controllers
         // GET: Appointments/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["AppointmentStatus"] = new List<SelectListItem>
-            {
-                new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
-                new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
-                new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
-                new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
-                new SelectListItem { Value = AppointmentStatus.Canceled, Text = "Canceled" }
-            };
+            //ViewData["AppointmentStatus"] = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
+            //    new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
+            //    new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
+            //    new SelectListItem { Value = AppointmentStatus.Canceled, Text = "Canceled" }
+            //};
             ViewData["OwnerId"] = new SelectList(await GetOwners(), "OwnerId", "OwnerId");
             return View();
         }
@@ -100,7 +99,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes,TotalEstimatedDuration,TotalCost")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,ContactEmail,ContactPhone,Status,SpecialRequests,Notes")] Appointment appointment)
 
         {
             bool saveStatus = false;
@@ -121,6 +120,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
                             }
                             else
                             {
+                                TempData["Status"] = result.Status.ToString();
+                                TempData["Message"] = result.Message;
                                 saveStatus = false;
                             }
                         }
@@ -133,14 +134,6 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["AppointmentStatus"] = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
-                    new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
-                    new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
-                    new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
-                    new SelectListItem { Value = AppointmentStatus.Canceled, Text = "Canceled" }
-                };
                 ViewData["OwnerId"] = new SelectList(await GetOwners(), "OwnerId", "OwnerId");
                 return View(appointment);
             }
@@ -169,7 +162,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
             ViewData["AppointmentStatus"] = new List<SelectListItem>
             {
-                new SelectListItem { Value = AppointmentStatus.Pending.ToString(), Text = "Pending", Selected = (appointment.Status == AppointmentStatus.Pending.ToString()) },
+                new SelectListItem { Value = AppointmentStatus.Confirmed.ToString(), Text = "Pending", Selected = (appointment.Status == AppointmentStatus.Pending.ToString()) },
                 new SelectListItem { Value = AppointmentStatus.Confirmed.ToString(), Text = "Confirmed", Selected = (appointment.Status == AppointmentStatus.Confirmed.ToString()) },
                 new SelectListItem { Value = AppointmentStatus.InProgress.ToString(), Text = "In Progress", Selected = (appointment.Status == AppointmentStatus.InProgress.ToString()) },
                 new SelectListItem { Value = AppointmentStatus.Completed.ToString(), Text = "Completed", Selected = (appointment.Status == AppointmentStatus.Completed.ToString()) },
@@ -180,8 +173,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes,TotalEstimatedDuration,TotalCost")] Appointment appointment)
-
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,ContactEmail,ContactPhone,Status,SpecialRequests,Notes")] Appointment appointment)
         {
             bool saveStatus = false;
 
@@ -201,6 +193,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
                             }
                             else
                             {
+                                TempData["Status"] = result.Status.ToString();
+                                TempData["Message"] = result.Message;
                                 saveStatus = false;
                             }
                         }
@@ -215,7 +209,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             {
                 ViewData["AppointmentStatus"] = new List<SelectListItem>
                 {
-                    new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
+                   new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
                     new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
                     new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
                     new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
@@ -276,6 +270,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
                             }
                             else
                             {
+                                TempData["Status"] = result.Status.ToString();
+                                TempData["Message"] = result.Message;
                                 deleteStatus = false;
                             }
                         }

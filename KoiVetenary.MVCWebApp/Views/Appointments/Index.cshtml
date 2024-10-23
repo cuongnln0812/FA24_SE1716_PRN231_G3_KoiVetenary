@@ -9,9 +9,18 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<div class="mb-3">
+    <input type="text" id="searchTerm" class="form-control" placeholder="Search Appointments...">
+    <button onclick="searchData()" class="btn btn-primary mt-2">Search</button>
+</div>
+
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentId);
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.AppointmentDate)
             </th>
@@ -61,10 +70,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AppointmentDate, "{0:yyyy-MM-dd}")
+               @Html.DisplayFor(modelItem => item.AppointmentId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AppointmentTime)
+                @item.AppointmentDate?.ToString("yyyy-MM-dd")
+            </td>
+            <td>
+                @item.AppointmentDate?.ToString("HH:mm:ss")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ContactEmail)
@@ -100,7 +112,7 @@
                 @Html.DisplayFor(modelItem => item.UpdatedDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Owner.OwnerId)
+                    @item.Owner.FirstName @item.Owner.LastName
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
@@ -112,3 +124,72 @@
 }
     </tbody>
 </table>
+
+@section scripts {
+    <script type="text/javascript">
+        function searchData() {
+            var searchTerm = $('#searchTerm').val().trim(); // Get the value of the search term and trim any spaces
+            var url = 'https://localhost:7238/api/Appointments';
+
+            // If search term is not empty, append it to the search API call
+            if (searchTerm !== '') {
+                url = url + '/search?searchTerm=' + encodeURIComponent(searchTerm);
+            }
+
+            // Make AJAX call to fetch records based on search term or all records if searchTerm is empty
+            $.ajax({
+                url: url,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    renderTable(result.data); // Render the search results or all records
+                },
+                error: function (xhr, error) {
+                    alert('Error: ' + xhr.statusText);
+                }
+            });
+        }
+        function renderTable(data) {
+            var tableBody = $('table tbody'); // Select the table body
+            tableBody.empty(); // Clear existing rows in the table
+
+            // Iterate over each item in the result and append rows dynamically
+            $.each(data, function (index, item) {
+                var row = '<tr>' +
+                    '<td>' + formatDate(item.appointmentDate) + '</td>' +
+                    '<td>' + item.appointmentTime + '</td>' +
+                    '<td>' + item.contactEmail + '</td>' +
+                    '<td>' + item.contactPhone + '</td>' +
+                    '<td>' + item.status + '</td>' +
+                    '<td>' + item.specialRequests + '</td>' +
+                    '<td>' + item.notes + '</td>' +
+                    '<td>' + item.totalEstimatedDuration + '</td>' +
+                    '<td>' + item.totalCost + '</td>' +
+                    '<td>' + item.createdBy + '</td>' +
+                    '<td>' + item.modifiedBy + '</td>' +
+                    '<td>' + item.createdDate + '</td>' +
+                    '<td>' + item.updatedDate + '</td>' +
+                    '<td>' + item.owner.firstName + ' ' item.owner.LastName + '</td>' +
+                    '<td>' +
+                    '<a href="/Appointments/Edit/' + item.appointmentId + '">Edit</a> | ' +
+                    '<a href="/Appointments/Details/' + item.appointmentId + '">Details</a> | ' +
+                    '<a href="/Appointments/Delete/' + item.appointmentId + '">Delete</a> | ' +
+                    '<a href="/Payment/Create/' + item.appointmentId + '">Checkout</a>' +
+                    '</td>' +
+                    '</tr>';
+                tableBody.append(row); // Append the row to the table body
+            });
+        }
+
+        // Optional function to format date in 'yyyy-MM-dd' format
+        function formatDate(dateString) {
+            if (!dateString) return ''; // Return empty if date is not provided
+            var date = new Date(dateString);
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed
+            var day = ('0' + date.getDate()).slice(-2); // Add leading zero if needed
+            return year + '-' + month + '-' + day;
+        }
+     </script>
+}

@@ -33,5 +33,36 @@ namespace KoiVetenary.Data.Repositories
             }
             return entity;
         }
+        public async Task<Appointment> GetByIdWithTrackingAsync(int id)
+        {
+            var entity = await _context.Appointments.Include(a => a.Owner)
+                .AsTracking()
+                .FirstOrDefaultAsync(a => a.AppointmentId == id);
+            return entity;
+        }
+
+
+        public async Task<List<Appointment>> SearchAsync(string? searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                // Return all records if no search term is provided
+                return await _context.Appointments.Include(a => a.Owner).ToListAsync();
+            }
+
+            // Convert search term to lowercase for case-insensitive search
+            searchTerm = searchTerm.ToLower();
+
+            // Search across multiple fields using OR condition with case-insensitive comparison
+            var query = _context.Appointments.Include(a => a.Owner)
+                                               .Where(m => m.Status.ToLower().Contains(searchTerm) ||
+                                                           m.SpecialRequests.ToLower().Contains(searchTerm) ||
+                                                           m.Owner.LastName.ToLower().Contains(searchTerm) ||
+                                                           m.Owner.FirstName.ToLower().Contains(searchTerm) ||
+                                                           m.ContactEmail.ToLower().Contains(searchTerm) ||
+                                                           m.ContactPhone.ToLower().Contains(searchTerm));
+
+            return await query.ToListAsync();
+        }
     }
 }

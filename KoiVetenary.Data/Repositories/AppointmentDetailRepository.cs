@@ -67,6 +67,13 @@ namespace KoiVetenary.Data.Repositories
             return entity;
         }
 
+        public async Task<IEnumerable<AppointmentDetail>> GetDetailsByAppointmentIdAsync(int appointmentId)
+        {
+            return await _context.AppointmentDetails
+                                 .Where(ad => ad.AppointmentId == appointmentId)
+                                 .ToListAsync();
+        }
+
     }
 
 

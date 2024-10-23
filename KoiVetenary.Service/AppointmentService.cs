@@ -33,10 +33,13 @@ namespace KoiVetenary.Service
                 if (owner == null) {
                     return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Owner not found");
                 }
-                if (IsPastAppointment(appointment.AppointmentDate, appointment.AppointmentTime))
+                if (IsPastAppointment(appointment.AppointmentDate))
                 {
                     return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Appointment Date and Time cannot in the past");
                 }
+                appointment.AppointmentTime = TimeSpan.FromHours(0);
+                appointment.TotalCost = 0;    
+                appointment.TotalEstimatedDuration = 0;
                 appointment.CreatedDate = DateTime.Now;
                 appointment.UpdatedDate = DateTime.Now;
                 appointment.CreatedBy = owner.FirstName + owner.LastName;
@@ -61,10 +64,29 @@ namespace KoiVetenary.Service
         {
             try
             {
-                var removedItem = await _unitOfWork.AppointmentRepository.GetByIdAsync((int)id);
-                _unitOfWork.AppointmentRepository.PrepareRemove(removedItem);
-                var result = await _unitOfWork.AppointmentRepository.SaveAsync();
-                if (result > 0)
+                // Fetch the appointment along with its details
+                var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync((int)id);
+
+                if (appointment == null)
+                {
+                    return new KoiVetenaryResult(Const.FAIL_DELETE_CODE, "Appointment not found.");
+                }
+
+                // Remove all related appointment details first
+                var appointmentDetails = await _unitOfWork.AppointmentDetailRepository.GetDetailsByAppointmentIdAsync((int)id);
+                foreach (var detail in appointmentDetails)
+                {
+                    _unitOfWork.AppointmentDetailRepository.PrepareRemove(detail);
+                }
+                var appResultDetail = await _unitOfWork.AppointmentDetailRepository.SaveAsync();
+
+                // Remove the appointment itself
+                _unitOfWork.AppointmentRepository.PrepareRemove(appointment);
+
+                // Save all changes
+                var appResult = await _unitOfWork.AppointmentRepository.SaveAsync();
+
+                if (appResult > 0)
                 {
                     return new KoiVetenaryResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
                 }
@@ -78,6 +100,7 @@ namespace KoiVetenary.Service
                 return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.ToString());
             }
         }
+
 
         public async Task<IKoiVetenaryResult> GetAppointmentByIdAsync(int? id)
         {
@@ -145,9 +168,25 @@ namespace KoiVetenary.Service
             }
         }
 
-        public Task<IKoiVetenaryResult> SearchByKeyword(string? searchTerm)
+        public async Task<IKoiVetenaryResult> SearchByKeyword(string? searchTerm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _unitOfWork.AppointmentRepository.SearchAsync(searchTerm);
+
+                if (result.Any())
+                {
+                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                }
+                else
+                {
+                    return new KoiVetenaryResult(Const.FAIL_READ_CODE, "No records found matching the search criteria");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
         }
 
         public async Task<IKoiVetenaryResult> UpdateAppointment(Appointment appointment)
@@ -167,7 +206,7 @@ namespace KoiVetenary.Service
                 }
             
                 existed.AppointmentDate = appointment.AppointmentDate;
-                existed.AppointmentTime = appointment.AppointmentTime;
+                appointment.AppointmentTime = TimeSpan.FromHours(0);
                 existed.Status = appointment.Status;
                 existed.Notes = appointment.Notes;
                 existed.TotalEstimatedDuration = appointment.TotalEstimatedDuration;
@@ -198,19 +237,14 @@ namespace KoiVetenary.Service
             }
         }
 
-        public bool IsPastAppointment(DateTime? appointmentDate, TimeSpan? appointmentTime)
+        public bool IsPastAppointment(DateTime? appointmentDate)
         {
             // Check if either the date or time is null
-            if (!appointmentDate.HasValue || !appointmentTime.HasValue)
+            if (!appointmentDate.HasValue)
             {
                 return false; // or handle this case as you see fit
             }
-
-            // Combine the appointment date and time
-            DateTime appointmentDateTime = appointmentDate.Value.Date.Add(appointmentTime.Value);
-
-            // Check if the combined date and time is in the past
-            return appointmentDateTime < DateTime.Now;
+            return appointmentDate < DateTime.Now;
         }
     }
 }
