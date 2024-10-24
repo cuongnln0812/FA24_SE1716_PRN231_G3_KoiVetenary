@@ -22,6 +22,8 @@ namespace KoiVetenary.Service
             services.AddScoped<IOwnerService, OwnerService>();
             services.AddScoped<IMedicalRecordService, MedicalRecordService>();
             services.AddScoped<IAnimalTypeService, AnimalTypeService>();
+            services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<ICheckoutService, CheckoutService>();
             return services;
         }
     } 
