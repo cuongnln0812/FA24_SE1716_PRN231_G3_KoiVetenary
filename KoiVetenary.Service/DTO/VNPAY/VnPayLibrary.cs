@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace KoiVetenary.Service.DTO.VNPAY
 {
@@ -150,6 +146,7 @@ namespace KoiVetenary.Service.DTO.VNPAY
             return "127.0.0.1";
         }
     }
+
     public class VnPayCompare : IComparer<string>
     {
         public int Compare(string x, string y)

@@ -163,8 +163,12 @@
                 <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
-                <a asp-action="Create" asp-controller="Payment" asp-route-id="@item.AppointmentId">Checkout</a>
-            </td>
+                    @if (item.Status.Trim().Equals("Completed") || item.Status.Trim().Equals("To Pay"))
+                    {
+                        <span> | </span>
+                        <a asp-action="Create" asp-controller="Payment" asp-route-id="@item.AppointmentId">Checkout</a>
+                    }
+                </td>
         </tr>
 }
     </tbody>

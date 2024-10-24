@@ -8,7 +8,7 @@ namespace KoiVetenary.APIService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CheckoutController:ControllerBase
+    public class CheckoutController : ControllerBase
     {
         private readonly ICheckoutService _checkoutService;
         private readonly IVnPayService _vnpayService;
@@ -21,29 +21,24 @@ namespace KoiVetenary.APIService.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("Checkout")]
+        [HttpGet("create")]
         [ProducesResponseType(StatusCodes.Status302Found)]
-        public async Task<string> Checkout(int appointmentId)
+        public async Task<string> Checkout([FromQuery] int appointmentId)
         {
-            var appointment = _checkoutService.Checkout(appointmentId);
-            
-            
-            //var historySubId = historySub.HisSubscriptionId;
-            //var amount = historySub.Total;
+            var appointment = await _checkoutService.Checkout(appointmentId);
             var vnPayModel = new VnPayRequestModel
             {
-                AppointmentId = appointmentId,
-                OwnerId = "Name",
-                Notes = "Pay for treatment",
-                TotalCost = appointment.Result.TotalCost,
-                AppointmentDate = (DateTime)appointment.Result.AppointmentDate,
-                TotalEstimatedDuration = appointment.Result.TotalEstimatedDuration,
+                Amount = (double)appointment.TotalCost!,
+                CreatedDate = DateTime.Now,
+                Description = appointment.Notes,
+                FullName = $"{appointment.Owner.FirstName} {appointment.Owner.LastName}",
+                OrderId = appointment.AppointmentId
             };
             return _vnpayService.CreatePaymentUrl(HttpContext, vnPayModel);
         }
 
-        [HttpGet("vnpay-return")]
-        public async Task<IActionResult> HandleVnPayReturn([FromQuery] VnPayReturnModel model)
+        [HttpPost("insert-payment")]
+        public async Task<IActionResult> InsertPaymentAsync([FromBody] VnPayReturnModel model)
         {
             if (model.Vnp_TransactionStatus != "00") return BadRequest();
             var transaction = new Payment
@@ -67,11 +62,10 @@ namespace KoiVetenary.APIService.Controllers
                 SecureHash = model.Vnp_SecureHash,
 
             };
+
             var orderId = Convert.ToInt32(model.Vnp_OrderInfo);
             await _checkoutService.CreatePayment(orderId, transaction);
-            //await _checkoutService.CreateHistory(orderId, transaction);
-            //await _checkoutService.CreateSubscription(orderId);
-            return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{orderId}");
+            return Ok();
         }
     }
 }

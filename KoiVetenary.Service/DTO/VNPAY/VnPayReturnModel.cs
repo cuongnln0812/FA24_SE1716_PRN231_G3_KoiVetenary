@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KoiVetenary.Service.DTO.VNPAY
+﻿namespace KoiVetenary.Service.DTO.VNPAY
 {
     public class VnPayReturnModel
     {
+        public bool Success { get; set; }
         public long Vnp_Amount { get; set; }
         public string Vnp_BankCode { get; set; }
         public string Vnp_BankTranNo { get; set; }
