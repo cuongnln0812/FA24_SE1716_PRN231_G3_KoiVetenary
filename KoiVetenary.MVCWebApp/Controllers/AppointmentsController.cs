@@ -10,6 +10,7 @@ using KoiVetenary.Data.Models;
 using KoiVetenary.Business;
 using KoiVetenary.Common;
 using Newtonsoft.Json;
+using KoiVetenary.Service.DTO.Appointment;
 
 namespace KoiVetenary.MVCWebApp.Controllers
 {
@@ -20,7 +21,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         {
         }
 
-        // GET: Appointments
+        //GET: Appointments
         public async Task<IActionResult> Index()
         {
             try
@@ -57,6 +58,85 @@ namespace KoiVetenary.MVCWebApp.Controllers
             return View(new List<Appointment>());
 
         }
+        //public async Task<IActionResult> Index(string searchTerm = "", string ContactEmail = "", string ContactPhone = "", string Status = "", decimal? TotalCostFrom = null, decimal? TotalCostTo = null)
+        //{
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        KoiVetenaryResult appointments = null;
+
+        //        if (!string.IsNullOrWhiteSpace(searchTerm) || !string.IsNullOrWhiteSpace(ContactEmail) || !string.IsNullOrWhiteSpace(ContactPhone) || !string.IsNullOrWhiteSpace(Status) || TotalCostFrom.HasValue || TotalCostTo.HasValue)
+        //        {
+        //            var appointmentSearchCriteria = new AppointmentSearchCriteria
+        //            {
+        //                ContactEmail = ContactEmail,
+        //                ContactPhone = ContactPhone,
+        //                Status = Status,
+        //                TotalCostFrom = TotalCostFrom,
+        //                TotalCostTo = TotalCostTo
+        //            };
+        //            var query = "Appointments/search?";
+
+        //            // Append ContactEmail if not null or empty
+        //            if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.ContactEmail))
+        //            {
+        //                query += $"ContactEmail={Uri.EscapeDataString(appointmentSearchCriteria.ContactEmail)}&";
+        //            }
+
+        //            // Append ContactPhone if not null or empty
+        //            if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.ContactPhone))
+        //            {
+        //                query += $"ContactPhone={Uri.EscapeDataString(appointmentSearchCriteria.ContactPhone)}&";
+        //            }
+
+        //            // Append Status if not null or empty
+        //            if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.Status))
+        //            {
+        //                query += $"Status={Uri.EscapeDataString(appointmentSearchCriteria.Status)}&";
+        //            }
+
+        //            // Add cost filtering
+        //            if (TotalCostFrom.HasValue)
+        //            {
+        //                query += $"&TotalCostFrom={TotalCostFrom.Value}";
+        //            }
+
+        //            if (TotalCostTo.HasValue)
+        //            {
+        //                query += $"&TotalCostTo={TotalCostTo.Value}";
+        //            }
+
+        //            using (var response = await httpClient.GetAsync(Const.API_Endpoint + query))
+        //            {
+        //                if (response.IsSuccessStatusCode)
+        //                {
+        //                    string apiResponse = await response.Content.ReadAsStringAsync();
+        //                    appointments = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            // If no search term or criteria, get all appointments
+        //            using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments"))
+        //            {
+        //                if (response.IsSuccessStatusCode)
+        //                {
+        //                    string apiResponse = await response.Content.ReadAsStringAsync();
+        //                    appointments = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
+        //                }
+        //            }
+        //        }
+
+        //        if (appointments != null && appointments.Data != null)
+        //        {
+        //            var data = JsonConvert.DeserializeObject<List<Appointment>>(appointments.Data.ToString());
+        //            return View(data);
+        //        }
+        //    }
+
+        //    return View(new List<Appointment>());
+        //}
+
 
         // GET: Appointments/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -84,14 +164,13 @@ namespace KoiVetenary.MVCWebApp.Controllers
         // GET: Appointments/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["AppointmentStatus"] = new List<SelectListItem>
-            {
-                new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
-                new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
-                new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
-                new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
-                new SelectListItem { Value = AppointmentStatus.Canceled, Text = "Canceled" }
-            };
+            //ViewData["AppointmentStatus"] = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
+            //    new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
+            //    new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
+            //    new SelectListItem { Value = AppointmentStatus.Canceled, Text = "Canceled" }
+            //};
             ViewData["OwnerId"] = new SelectList(await GetOwners(), "OwnerId", "OwnerId");
             return View();
         }
@@ -100,7 +179,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes,TotalEstimatedDuration,TotalCost")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes")] Appointment appointment)
 
         {
             bool saveStatus = false;
@@ -121,6 +200,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
                             }
                             else
                             {
+                                TempData["Status"] = result.Status.ToString();
+                                TempData["Message"] = result.Message;
                                 saveStatus = false;
                             }
                         }
@@ -133,14 +214,6 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
             else
             {
-                ViewData["AppointmentStatus"] = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
-                    new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
-                    new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
-                    new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
-                    new SelectListItem { Value = AppointmentStatus.Canceled, Text = "Canceled" }
-                };
                 ViewData["OwnerId"] = new SelectList(await GetOwners(), "OwnerId", "OwnerId");
                 return View(appointment);
             }
@@ -169,7 +242,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             }
             ViewData["AppointmentStatus"] = new List<SelectListItem>
             {
-                new SelectListItem { Value = AppointmentStatus.Pending.ToString(), Text = "Pending", Selected = (appointment.Status == AppointmentStatus.Pending.ToString()) },
+                new SelectListItem { Value = AppointmentStatus.Confirmed.ToString(), Text = "Pending", Selected = (appointment.Status == AppointmentStatus.Pending.ToString()) },
                 new SelectListItem { Value = AppointmentStatus.Confirmed.ToString(), Text = "Confirmed", Selected = (appointment.Status == AppointmentStatus.Confirmed.ToString()) },
                 new SelectListItem { Value = AppointmentStatus.InProgress.ToString(), Text = "In Progress", Selected = (appointment.Status == AppointmentStatus.InProgress.ToString()) },
                 new SelectListItem { Value = AppointmentStatus.Completed.ToString(), Text = "Completed", Selected = (appointment.Status == AppointmentStatus.Completed.ToString()) },
@@ -180,8 +253,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes,TotalEstimatedDuration,TotalCost")] Appointment appointment)
-
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes")] Appointment appointment)
         {
             bool saveStatus = false;
 
@@ -201,6 +273,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
                             }
                             else
                             {
+                                TempData["Status"] = result.Status.ToString();
+                                TempData["Message"] = result.Message;
                                 saveStatus = false;
                             }
                         }
@@ -215,7 +289,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             {
                 ViewData["AppointmentStatus"] = new List<SelectListItem>
                 {
-                    new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
+                   new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
                     new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
                     new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
                     new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },
@@ -276,6 +350,8 @@ namespace KoiVetenary.MVCWebApp.Controllers
                             }
                             else
                             {
+                                TempData["Status"] = result.Status.ToString();
+                                TempData["Message"] = result.Message;
                                 deleteStatus = false;
                             }
                         }

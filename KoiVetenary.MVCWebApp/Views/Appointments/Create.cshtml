@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Create";
+    var message = TempData["Message"] as string;
+    var status = TempData["Status"] as string;
 }
 
 <h1>Create</h1>
@@ -21,11 +23,11 @@
                 <input asp-for="AppointmentDate" class="form-control" type="date" />
                 <span asp-validation-for="AppointmentDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="AppointmentTime" class="control-label"></label>
-                <input asp-for="AppointmentTime" class="form-control" />
-                <span asp-validation-for="AppointmentTime" class="text-danger"></span>
-            </div>
+             <div class="form-group">
+                 <label asp-for="AppointmentTime" class="control-label"></label>
+                 <input asp-for="AppointmentTime" class="form-control" />
+                 <span asp-validation-for="AppointmentTime" class="text-danger"></span>
+             </div>
             <div class="form-group">
                 <label asp-for="ContactEmail" class="control-label"></label>
                 <input asp-for="ContactEmail" class="form-control" />
@@ -38,9 +40,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewData["AppointmentStatus"], "Value", "Text"))">
+                @* <select asp-for="Status" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewData["AppointmentStatus"], "Value", "Text"))">
                     <option value="">-- Select Status --</option>
-                </select>
+                </select> *@
+                <input asp-for="Status" class="form-control" value="PENDING" readonly />
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -60,7 +63,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="TotalCost" class="control-label"></label>
-                <input asp-for="TotalCost" class="form-control" value="0.0" readonly />
+                <input asp-for="TotalCost" class="form-control" value="0" readonly />
                 <span asp-validation-for="TotalCost" class="text-danger"></span>
             </div>
             @* <div class="form-group">
@@ -96,4 +99,10 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+@if (!string.IsNullOrEmpty(status) && !status.Equals("1"))
+{
+    <script>
+        alert('@message');
+    </script>
 }
