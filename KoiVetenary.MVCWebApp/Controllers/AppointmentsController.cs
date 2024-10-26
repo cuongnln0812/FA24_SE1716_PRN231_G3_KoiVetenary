@@ -253,7 +253,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,OwnerId,AppointmentDate,AppointmentTime,ContactEmail,ContactPhone,Status,SpecialRequests,Notes,TotalEstimatedDuration,TotalCost")] Appointment appointment)
         {
             bool saveStatus = false;
 
@@ -289,7 +289,7 @@ namespace KoiVetenary.MVCWebApp.Controllers
             {
                 ViewData["AppointmentStatus"] = new List<SelectListItem>
                 {
-                   new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
+                    new SelectListItem { Value = AppointmentStatus.Pending, Text = "Pending" },
                     new SelectListItem { Value = AppointmentStatus.Confirmed, Text = "Confirmed" },
                     new SelectListItem { Value = AppointmentStatus.InProgress, Text = "In Progress" },
                     new SelectListItem { Value = AppointmentStatus.Completed, Text = "Completed" },

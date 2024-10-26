@@ -24,8 +24,6 @@ namespace KoiVetenary.Service
         public async Task<Appointment> Checkout(int appointmentId)
         {
             var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId);
-            appointment.Status = "To Pay";
-            await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
             return appointment;
         }
 
@@ -43,7 +41,7 @@ namespace KoiVetenary.Service
             appointment.Payments.Add(transaction);
 
             // Update the appointment status
-            appointment.Status = "Paid";
+            appointment.IsPaid = true;
 
             // Update the appointment in the repository
             await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);

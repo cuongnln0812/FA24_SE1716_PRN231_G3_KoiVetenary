@@ -1,4 +1,5 @@
-﻿@model IEnumerable<KoiVetenary.Data.Models.Appointment>
+﻿@using KoiVetenary.Common
+@model IEnumerable<KoiVetenary.Data.Models.Appointment>
 
 @{
     ViewData["Title"] = "Index";
@@ -88,6 +89,9 @@
                 @Html.DisplayNameFor(model => model.Notes)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.IsPaid)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.TotalEstimatedDuration)
             </th>
             <th>
@@ -139,6 +143,9 @@
                 @Html.DisplayFor(modelItem => item.Notes)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.IsPaid)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.TotalEstimatedDuration)
             </td>
             <td>
@@ -162,8 +169,8 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
-                    @if (item.Status.Trim().Equals("Completed") || item.Status.Trim().Equals("To Pay"))
+                    <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
+                    @if (!item.IsPaid.Value && item.Status.Trim().Equals(AppointmentStatus.Completed))
                     {
                         <span> | </span>
                         <a asp-action="Create" asp-controller="Payment" asp-route-id="@item.AppointmentId">Checkout</a>
@@ -175,6 +182,7 @@
 </table>
 
 @section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         function searchData() {
             var searchTerm = $('#searchTerm').val().trim(); // Get the value of the search term and trim any spaces

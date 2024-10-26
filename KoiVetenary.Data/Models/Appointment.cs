@@ -20,6 +20,7 @@ namespace KoiVetenary.Data.Models
         public string ContactEmail { get; set; }
         public string ContactPhone { get; set; }
         public string Status { get; set; }
+        public bool? IsPaid { get; set; }
         public string SpecialRequests { get; set; }
         public string Notes { get; set; }
         public int? TotalEstimatedDuration { get; set; }

@@ -40,10 +40,11 @@ namespace KoiVetenary.Service
                 if (owner == null) {
                     return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Owner not found");
                 }
-                if (IsPastAppointment(appointment.AppointmentDate))
+                if (IsPastAppointment(appointment.AppointmentDate, appointment.AppointmentTime))
                 {
                     return new KoiVetenaryResult(Const.ERROR_EXCEPTION, "Appointment Date and Time cannot in the past");
                 }
+                appointment.IsPaid = false;  
                 appointment.TotalCost = 0;    
                 appointment.TotalEstimatedDuration = 0;
                 appointment.CreatedDate = DateTime.Now;
@@ -302,15 +303,19 @@ namespace KoiVetenary.Service
             }
         }
 
-        public bool IsPastAppointment(DateTime? appointmentDate)
+        public bool IsPastAppointment(DateTime? appointmentDate, TimeSpan? appointmentTime)
         {
             // Check if either the date or time is null
-            if (!appointmentDate.HasValue)
+            if (!appointmentDate.HasValue || !appointmentTime.HasValue)
             {
                 return false; // or handle this case as you see fit
             }
-            
-            return appointmentDate < DateTime.Now;
+
+            // Combine the date and time into a single DateTime object
+            DateTime combinedDateTime = appointmentDate.Value.Date.Add(appointmentTime.Value);
+
+            // Check if the combined date and time is in the past
+            return combinedDateTime < DateTime.Now;
         }
     }
 }

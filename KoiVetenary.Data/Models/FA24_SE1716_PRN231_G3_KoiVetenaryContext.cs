@@ -100,7 +100,7 @@ namespace KoiVetenary.Data.Models
             modelBuilder.Entity<AnimalType>(entity =>
             {
                 entity.HasKey(e => e.TypeId)
-                    .HasName("PK__AnimalTy__516F0395387DDE85");
+                    .HasName("PK__AnimalTy__516F039529D91AFB");
 
                 entity.Property(e => e.TypeId).HasColumnName("TypeID");
 
@@ -222,7 +222,7 @@ namespace KoiVetenary.Data.Models
             modelBuilder.Entity<MedicalRecord>(entity =>
             {
                 entity.HasKey(e => e.RecordId)
-                    .HasName("PK__MedicalR__FBDF78C926E608BA");
+                    .HasName("PK__MedicalR__FBDF78C9B4DEDB6A");
 
                 entity.Property(e => e.RecordId).HasColumnName("RecordID");
 
