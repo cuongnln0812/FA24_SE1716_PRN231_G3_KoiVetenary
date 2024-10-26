@@ -51,45 +51,76 @@ namespace KoiVetenary.MVCWebApp.Controllers
 
                     };
 
-                    // Construct the query with search term
-                    var query = $"Animals/search?Name={Uri.EscapeDataString(animalSearchCriteria.Name)}" +
-                                $"&TypeName={Uri.EscapeDataString(animalSearchCriteria.TypeName)}" +
-                                $"&Species={Uri.EscapeDataString(animalSearchCriteria.Species)}" +
-                                $"&Color={Uri.EscapeDataString(animalSearchCriteria.Color)}" +
-                                $"&OwnerFirstName={Uri.EscapeDataString(animalSearchCriteria.OwnerFirstName)}" +
-                                $"&OwnerLastName={Uri.EscapeDataString(animalSearchCriteria.OwnerLastName)}";
+                    var query = "Animals/search?";
+
+                    // Check and append search criteria
+                    if (!string.IsNullOrWhiteSpace(animalSearchCriteria.Name))
+                    {
+                        query += $"Name={Uri.EscapeDataString(animalSearchCriteria.Name)}&";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(animalSearchCriteria.TypeName))
+                    {
+                        query += $"TypeName={Uri.EscapeDataString(animalSearchCriteria.TypeName)}&";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(animalSearchCriteria.Species))
+                    {
+                        query += $"Species={Uri.EscapeDataString(animalSearchCriteria.Species)}&";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(animalSearchCriteria.Color))
+                    {
+                        query += $"Color={Uri.EscapeDataString(animalSearchCriteria.Color)}&";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(animalSearchCriteria.OwnerFirstName))
+                    {
+                        query += $"OwnerFirstName={Uri.EscapeDataString(animalSearchCriteria.OwnerFirstName)}&";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(animalSearchCriteria.OwnerLastName))
+                    {
+                        query += $"OwnerLastName={Uri.EscapeDataString(animalSearchCriteria.OwnerLastName)}&";
+                    }
 
                     // Add date of birth filtering
                     if (DateOfBirthFrom.HasValue)
                     {
-                        query += $"&DateOfBirthFrom={DateOfBirthFrom.Value:yyyy-MM-dd}";
+                        query += $"DateOfBirthFrom={DateOfBirthFrom.Value:yyyy-MM-dd}&";
                     }
 
                     if (DateOfBirthTo.HasValue)
                     {
-                        query += $"&DateOfBirthTo={DateOfBirthTo.Value:yyyy-MM-dd}";
+                        query += $"DateOfBirthTo={DateOfBirthTo.Value:yyyy-MM-dd}&";
                     }
 
                     // Add age filtering
                     if (AgeFrom.HasValue)
                     {
-                        query += $"&AgeFrom={AgeFrom.Value}";
+                        query += $"AgeFrom={AgeFrom.Value}&";
                     }
 
                     if (AgeTo.HasValue)
                     {
-                        query += $"&AgeTo={AgeTo.Value}";
+                        query += $"AgeTo={AgeTo.Value}&";
                     }
 
                     // Add weight filtering
                     if (WeightFrom.HasValue)
                     {
-                        query += $"&WeightFrom={WeightFrom.Value}";
+                        query += $"WeightFrom={WeightFrom.Value}&";
                     }
 
                     if (WeightTo.HasValue)
                     {
-                        query += $"&WeightTo={WeightTo.Value}";
+                        query += $"WeightTo={WeightTo.Value}&";
+                    }
+
+                    // Remove trailing '&' if it exists
+                    if (query.EndsWith("&"))
+                    {
+                        query = query.Remove(query.Length - 1);
                     }
 
                     using (var response = await httpClient.GetAsync(Const.API_Endpoint + query))
