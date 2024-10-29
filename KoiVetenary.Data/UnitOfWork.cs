@@ -20,11 +20,18 @@ namespace KoiVetenary.Data
         private OwnerRepository _owner;
         private MedicalRecordRepository _medicalRecord;
         private AnimalTypeRepository _animalType;
+        private PaymentRepository _payment;
 
         public UnitOfWork()
         {
             _unitOfWorkContext = new FA24_SE1716_PRN231_G3_KoiVetenaryContext();
         }
+        public PaymentRepository PaymentRepository
+        {
+            get { return _payment ??= new PaymentRepository(); }
+        }
+
+
         public AnimalRepository AnimalRepository
         {
             get { return _animal ??= new AnimalRepository(); }
