@@ -163,8 +163,9 @@ namespace KoiVetenary.Service
                 var query = _unitOfWork.AnimalRepository.GetQueryable();
 
                 // Initialize a predicate for OR conditions
-                var predicate = PredicateBuilder.New<Animal>(false); // Start with false for OR conditions
+                var predicate = PredicateBuilder.New<Animal>(false); 
 
+                // Start with false for OR conditions
                 if (!string.IsNullOrWhiteSpace(searchCriteria.Name))
                 {
                     predicate = predicate.Or(a => a.Name.Contains(searchCriteria.Name));

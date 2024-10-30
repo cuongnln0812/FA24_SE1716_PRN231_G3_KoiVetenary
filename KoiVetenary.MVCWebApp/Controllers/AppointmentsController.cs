@@ -22,120 +22,131 @@ namespace KoiVetenary.MVCWebApp.Controllers
         }
 
         //GET: Appointments
-        public async Task<IActionResult> Index()
-        {
-            try
-            {
-                using (var httpClient = new HttpClient())
-                {
-                    var apiEndpoint = Const.API_Endpoint + "Appointments";
-                    var response = await httpClient.GetAsync(apiEndpoint);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var content = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<KoiVetenaryResult>(content);
-
-                        if (result != null && result.Data != null)
-                        {
-                            var data = JsonConvert.DeserializeObject<List<Appointment>>(result.Data.ToString());
-                            return View(data);
-                        }
-                    }
-                    else
-                    {
-                        // Log the status code and response message for debugging
-                        Console.WriteLine($"API call failed. Status code: {response.StatusCode}, Message: {response.ReasonPhrase}");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception for debugging
-                Console.WriteLine($"Exception occurred: {ex.Message}");
-            }
-
-            return View(new List<Appointment>());
-
-        }
-        //public async Task<IActionResult> Index(string searchTerm = "", string ContactEmail = "", string ContactPhone = "", string Status = "", decimal? TotalCostFrom = null, decimal? TotalCostTo = null)
+        //public async Task<IActionResult> Index()
         //{
-        //    using (var httpClient = new HttpClient())
+        //    try
         //    {
-        //        KoiVetenaryResult appointments = null;
-
-        //        if (!string.IsNullOrWhiteSpace(searchTerm) || !string.IsNullOrWhiteSpace(ContactEmail) || !string.IsNullOrWhiteSpace(ContactPhone) || !string.IsNullOrWhiteSpace(Status) || TotalCostFrom.HasValue || TotalCostTo.HasValue)
+        //        using (var httpClient = new HttpClient())
         //        {
-        //            var appointmentSearchCriteria = new AppointmentSearchCriteria
-        //            {
-        //                ContactEmail = ContactEmail,
-        //                ContactPhone = ContactPhone,
-        //                Status = Status,
-        //                TotalCostFrom = TotalCostFrom,
-        //                TotalCostTo = TotalCostTo
-        //            };
-        //            var query = "Appointments/search?";
+        //            var apiEndpoint = Const.API_Endpoint + "Appointments";
+        //            var response = await httpClient.GetAsync(apiEndpoint);
 
-        //            // Append ContactEmail if not null or empty
-        //            if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.ContactEmail))
+        //            if (response.IsSuccessStatusCode)
         //            {
-        //                query += $"ContactEmail={Uri.EscapeDataString(appointmentSearchCriteria.ContactEmail)}&";
-        //            }
+        //                var content = await response.Content.ReadAsStringAsync();
+        //                var result = JsonConvert.DeserializeObject<KoiVetenaryResult>(content);
 
-        //            // Append ContactPhone if not null or empty
-        //            if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.ContactPhone))
-        //            {
-        //                query += $"ContactPhone={Uri.EscapeDataString(appointmentSearchCriteria.ContactPhone)}&";
-        //            }
-
-        //            // Append Status if not null or empty
-        //            if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.Status))
-        //            {
-        //                query += $"Status={Uri.EscapeDataString(appointmentSearchCriteria.Status)}&";
-        //            }
-
-        //            // Add cost filtering
-        //            if (TotalCostFrom.HasValue)
-        //            {
-        //                query += $"&TotalCostFrom={TotalCostFrom.Value}";
-        //            }
-
-        //            if (TotalCostTo.HasValue)
-        //            {
-        //                query += $"&TotalCostTo={TotalCostTo.Value}";
-        //            }
-
-        //            using (var response = await httpClient.GetAsync(Const.API_Endpoint + query))
-        //            {
-        //                if (response.IsSuccessStatusCode)
+        //                if (result != null && result.Data != null)
         //                {
-        //                    string apiResponse = await response.Content.ReadAsStringAsync();
-        //                    appointments = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
+        //                    var data = JsonConvert.DeserializeObject<List<Appointment>>(result.Data.ToString());
+        //                    return View(data);
         //                }
         //            }
-        //        }
-        //        else
-        //        {
-        //            // If no search term or criteria, get all appointments
-        //            using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments"))
+        //            else
         //            {
-        //                if (response.IsSuccessStatusCode)
-        //                {
-        //                    string apiResponse = await response.Content.ReadAsStringAsync();
-        //                    appointments = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
-        //                }
+        //                // Log the status code and response message for debugging
+        //                Console.WriteLine($"API call failed. Status code: {response.StatusCode}, Message: {response.ReasonPhrase}");
         //            }
         //        }
-
-        //        if (appointments != null && appointments.Data != null)
-        //        {
-        //            var data = JsonConvert.DeserializeObject<List<Appointment>>(appointments.Data.ToString());
-        //            return View(data);
-        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the exception for debugging
+        //        Console.WriteLine($"Exception occurred: {ex.Message}");
         //    }
 
         //    return View(new List<Appointment>());
+
         //}
+        public async Task<IActionResult> Index(string contactEmail = "", string contactPhone = "", string status = "", decimal? totalCostFrom = null, decimal? totalCostTo = null)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                KoiVetenaryResult appointments = null;
+
+                // Check if any search criteria are provided
+                if (!string.IsNullOrWhiteSpace(contactEmail) ||
+                    !string.IsNullOrWhiteSpace(contactPhone) ||
+                    !string.IsNullOrWhiteSpace(status) ||
+                    totalCostFrom.HasValue ||
+                    totalCostTo.HasValue)
+                {
+                    var appointmentSearchCriteria = new AppointmentSearchCriteria
+                    {
+                        ContactEmail = contactEmail,
+                        ContactPhone = contactPhone,
+                        Status = status,
+                        TotalCostFrom = totalCostFrom,
+                        TotalCostTo = totalCostTo
+                    };
+
+                    var query = "Appointments/search?";
+
+                    // Check and append search criteria
+                    if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.ContactEmail))
+                    {
+                        query += $"ContactEmail={Uri.EscapeDataString(appointmentSearchCriteria.ContactEmail)}&";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.ContactPhone))
+                    {
+                        query += $"ContactPhone={Uri.EscapeDataString(appointmentSearchCriteria.ContactPhone)}&";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(appointmentSearchCriteria.Status))
+                    {
+                        query += $"Status={Uri.EscapeDataString(appointmentSearchCriteria.Status)}&";
+                    }
+
+                    // Add total cost filtering
+                    if (totalCostFrom.HasValue)
+                    {
+                        query += $"TotalCostFrom={totalCostFrom.Value}&";
+                    }
+
+                    if (totalCostTo.HasValue)
+                    {
+                        query += $"TotalCostTo={totalCostTo.Value}&";
+                    }
+
+                    // Remove trailing '&' if it exists
+                    if (query.EndsWith("&"))
+                    {
+                        query = query.Remove(query.Length - 1);
+                    }
+
+                    using (var response = await httpClient.GetAsync(Const.API_Endpoint + query))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            appointments = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
+                        }
+                    }
+                }
+                else
+                {
+                    // If no search criteria, get all appointments
+                    using (var response = await httpClient.GetAsync(Const.API_Endpoint + "Appointments"))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            appointments = JsonConvert.DeserializeObject<KoiVetenaryResult>(apiResponse);
+                        }
+                    }
+                }
+
+                if (appointments != null && appointments.Data != null)
+                {
+                    var data = JsonConvert.DeserializeObject<List<Appointment>>(appointments.Data.ToString());
+                    return View(data);
+                }
+            }
+
+            return View(new List<Appointment>());
+        }
+
 
 
         // GET: Appointments/Details/5

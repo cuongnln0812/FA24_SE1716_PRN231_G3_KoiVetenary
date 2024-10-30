@@ -40,11 +40,11 @@ namespace KoiVetenary.APIService.Controllers
         {
             return await _appointmentService.GetPendingAppointmentsAsync();
         }
-
+            
         [HttpGet("search")]
-        public async Task<IKoiVetenaryResult> SearchAppointmentsAsync([FromQuery] String searchTerm)
+        public async Task<IKoiVetenaryResult> SearchAppointmentsAsync([FromQuery] AppointmentSearchCriteria searchTerm)
         {
-            return await _appointmentService.SearchByKeyword(searchTerm);
+            return await _appointmentService.SearchByMultipleKeyword(searchTerm);
         }
 
         //GET: Appointments/Details/5

@@ -8,9 +8,9 @@ namespace KoiVetenary.Service.DTO.Appointment
 {
     public class AppointmentSearchCriteria
     {
-        public string ContactEmail { get; set; }
-        public string ContactPhone { get; set; }
-        public string Status { get; set; }
+        public string? ContactEmail { get; set; }
+        public string? ContactPhone { get; set; }
+        public string? Status { get; set; }
         public decimal? TotalCostFrom { get; set; }
         public decimal? TotalCostTo { get; set; }
     }

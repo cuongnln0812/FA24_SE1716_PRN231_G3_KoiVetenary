@@ -202,47 +202,38 @@ namespace KoiVetenary.Service
             {
                 var query = _unitOfWork.AppointmentRepository.GetQueryable();
 
-                // Initialize a predicate for OR conditions
-                var predicate = PredicateBuilder.New<Appointment>(false); // Start with false for OR conditions
+                // Initialize a predicate to true (for AND conditions by default)
+                var predicate = PredicateBuilder.New<Appointment>(false);
 
-                // Filter by Contact Email
+                // Apply OR conditions for contact information fields
                 if (!string.IsNullOrWhiteSpace(searchCriteria.ContactEmail))
                 {
                     predicate = predicate.Or(a => a.ContactEmail.Contains(searchCriteria.ContactEmail));
                 }
 
-                // Filter by Contact Phone
                 if (!string.IsNullOrWhiteSpace(searchCriteria.ContactPhone))
                 {
-                    predicate = predicate.Or(a => a.ContactPhone.Contains(searchCriteria.ContactPhone));
+                    predicate = predicate.Or(a => a.ContactEmail.Contains(searchCriteria.ContactPhone));
                 }
 
-                // Filter by Status
                 if (!string.IsNullOrWhiteSpace(searchCriteria.Status))
-                {
-                    predicate = predicate.Or(a => a.Status.Contains(searchCriteria.Status));
-                }
+                    predicate = predicate.And(a => a.Status == searchCriteria.Status);
 
-                // Add total cost filtering
+                // Apply AND conditions for filtering by TotalCost range
                 if (searchCriteria.TotalCostFrom.HasValue)
-                {
                     predicate = predicate.And(a => a.TotalCost >= searchCriteria.TotalCostFrom.Value);
-                }
 
                 if (searchCriteria.TotalCostTo.HasValue)
-                {
                     predicate = predicate.And(a => a.TotalCost <= searchCriteria.TotalCostTo.Value);
-                }
 
                 // Apply the predicate to the query
                 query = query.Where(predicate);
 
-                var animals = await query.Include(a => a.Owner)
-                    .ToListAsync();
+                var appointments = query.Include(a => a.Owner).ToList();
 
-                if (animals.Any())
+                if (appointments.Any())
                 {
-                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, animals);
+                    return new KoiVetenaryResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, appointments);
                 }
                 else
                 {
@@ -254,6 +245,7 @@ namespace KoiVetenary.Service
                 return new KoiVetenaryResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
 
         public async Task<IKoiVetenaryResult> UpdateAppointment(Appointment appointment)
         {
